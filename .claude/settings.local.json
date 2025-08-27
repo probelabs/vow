@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/Users/leonidbugaev/go/src/**)",
+      "Read(/Users/leonidbugaev/go/src/**)",
+      "Read(/Users/leonidbugaev/go/src/**)",
+      "Read(/Users/leonidbugaev/go/src/**)",
+      "Read(/Users/leonidbugaev/go/src/probe-docs-mcp/**)",
+      "Read(/Users/leonidbugaev/go/src/airlock/**)",
+      "Read(/Users/leonidbugaev/go/src/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
