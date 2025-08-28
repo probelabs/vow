@@ -91,17 +91,6 @@ function checkVow(options = {}) {
     
     // Handle hook mode - need consent before proceeding
     if (hookMode) {
-      const stopReason = `Vow accountability check required. Validation code: ${validationCode}`;
-      const response = { 
-        continue: false, 
-        stopReason: stopReason
-      };
-      
-      if (hookType === 'PreToolUse') {
-        response.hookSpecificOutput = { permissionDecision: 'deny' };
-      }
-      
-      // Also write the full rules to stderr for AI to see
       const header = '# ⚠️ STOP - AI ACCOUNTABILITY CHECK\n\n' +
                      'Before continuing, you need to stop and evaluate yourself with the rules below:\n\n' +
                      '---\n\n';
@@ -116,8 +105,18 @@ function checkVow(options = {}) {
                      `Create a file named \`.vow-consent\` containing exactly: \`${validationCode}\`\n\n` +
                      '⚠️ **IMPORTANT**: Never create .vow-consent in advance. Always evaluate yourself first!';
       
-      const fullOutput = header + vowContent + footer;
-      process.stderr.write(fullOutput);
+      const fullRulesContent = header + vowContent + footer;
+      
+      const response = { 
+        continue: true
+      };
+      
+      if (hookType === 'PreToolUse') {
+        response.hookSpecificOutput = { 
+          permissionDecision: 'deny',
+          permissionDecisionReason: fullRulesContent
+        };
+      }
       
       console.log(JSON.stringify(response));
       return 2; // Exit code 2 for blocking error
