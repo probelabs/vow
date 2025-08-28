@@ -39,13 +39,12 @@ Before finishing this task, you must honestly review your work.
 
 ---
 
-**If you agree with all applicable items above**, create the consent file with **EXACTLY** the content '1':
+**If you agree with all applicable items above**, create the consent file:
 
 ```bash
 printf '1' | tee .AGENT_CONSENT >/dev/null
 ```
 
-**IMPORTANT**: The file must contain exactly '1' (no extra spaces, newlines, or other content).
-Any other content will be rejected as invalid consent.
+**IMPORTANT**: For the next runs never create .AGENT_CONSENT in advance. Always evaluate yourself against these rules first.
 
 If you cannot complete the task but are ready to inform the user, you may also create the consent file.

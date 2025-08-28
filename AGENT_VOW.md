@@ -45,4 +45,6 @@ Before finishing this task, you must honestly review your work.
 printf '1' | tee .AGENT_CONSENT >/dev/null
 ```
 
+**IMPORTANT**: For the next runs never create .AGENT_CONSENT in advance. Always evaluate yourself against these rules first.
+
 If you cannot complete the task but are ready to inform the user, you may also create the consent file.
