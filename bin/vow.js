@@ -191,7 +191,7 @@ function checkVow(options = {}) {
                             '   - List specific violations if not compliant\n' +
                             '3. **Provide consent** (only if no violations):\n' +
                             `   Create file \`.vow-consent\` containing: \`${validationCode}\`\n` +
-                            '4. **Retry the command** after providing consent\n\n' +
+                            '4. **Retry any blocked command** (e.g., git commit) after providing consent\n\n' +
                             `**VALIDATION CODE**: \`${validationCode}\`\n\n` +
                             '⚠️ **IMPORTANT**: You can only create consent file after thorough review. If there are violations, you cannot provide consent.';
       
@@ -213,7 +213,7 @@ function checkVow(options = {}) {
                    '   - List specific violations if not compliant\n\n' +
                    '2. **Provide consent**:\n' +
                    `   Create file \`.vow-consent\` containing: \`${validationCode}\`\n\n` +
-                   '3. **Retry the blocked command**\n\n' +
+                   '3. **Retry any blocked command** (e.g., git commit)\n\n' +
                    `**VALIDATION CODE**: \`${validationCode}\`\n\n` +
                    '⚠️ **IMPORTANT**: Never create .vow-consent in advance. Always evaluate yourself first!';
     
