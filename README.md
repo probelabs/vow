@@ -354,8 +354,14 @@ npx -y @probelabs/vow@latest install --dry-run
 Remove Vow from all locations:
 
 ```bash
-vow install --uninstall
-# Cleanly removes Vow from git hooks, Husky, Claude Code, etc.
+# Using the uninstall subcommand (recommended)
+npx -y @probelabs/vow@latest uninstall
+
+# Or using install with --uninstall flag
+npx -y @probelabs/vow@latest install --uninstall
+
+# With confirmation bypass
+npx -y @probelabs/vow@latest uninstall --yes
 ```
 
 ### Rules System

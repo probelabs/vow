@@ -297,6 +297,7 @@ Usage:
   vow check            Check if AI has taken the vow
   vow consent <code>   Write validation code to consent file
   vow install          Interactive installation wizard
+  vow uninstall        Remove Vow from all locations
   vow rules            Display current vow rules
   vow --help           Show this help message
   vow --version        Show version
@@ -306,6 +307,8 @@ Commands:
   consent <code>       Write validation code to .vow-consent file
   install              Set up Vow in your project (same as default)
                        Use 'vow install --help' for installation options
+  uninstall            Remove Vow from git hooks, Husky, Claude Code, etc.
+                       Use 'vow uninstall --help' for options
   rules                Show the current vow rules being used
                        (local AGENT_VOW.md or package default)
 
@@ -416,6 +419,23 @@ function main() {
   if (args[0] === 'rules') {
     const exitCode = showRules();
     process.exit(exitCode);
+  }
+  
+  // Check for uninstall command
+  if (args[0] === 'uninstall') {
+    // Run the install script with --uninstall flag
+    const installScript = path.join(__dirname, 'vow-install.js');
+    const uninstallArgs = ['--uninstall', ...args.slice(1)];
+    
+    const child = spawn('node', [installScript, ...uninstallArgs], {
+      stdio: 'inherit'
+    });
+    
+    child.on('exit', (code) => {
+      process.exit(code || 0);
+    });
+    
+    return;
   }
   
   // Default behavior: run install (interactive installation)
