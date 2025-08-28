@@ -171,7 +171,7 @@
                 <h3>Manual Setup</h3>
                 
                 <p class="prose">
-                    <strong>Git Hooks</strong> - Add to any existing pre-commit hook:
+                    <strong><a href="https://git-scm.com/docs/githooks" target="_blank">Git Hooks</a></strong> - Add to any existing pre-commit hook:
                 </p>
 
                 <div class="code-block">
@@ -179,7 +179,7 @@
                 </div>
 
                 <p class="prose">
-                    <strong>Husky</strong> - For projects using Husky v9 (recommended):
+                    <strong><a href="https://typicode.github.io/husky/" target="_blank">Husky</a></strong> - For projects using Husky v9 (recommended):
                 </p>
 
                 <div class="code-block">
@@ -191,25 +191,7 @@ echo 'npx @probelabs/vow@latest check' >> .husky/pre-commit</code></pre>
                 </div>
 
                 <p class="prose">
-                    <strong>Claude Code</strong> - Add git commit hook to settings:
-                </p>
-
-                <div class="code-block">
-                    <pre><code># Local settings (recommended)
-# .claude/settings.local.json
-{
-  "gitCommitHook": "npx @probelabs/vow@latest check"
-}
-
-# Or project-wide settings
-# .claude/settings.json  
-{
-  "gitCommitHook": "npx @probelabs/vow@latest check"
-}</code></pre>
-                </div>
-
-                <p class="prose">
-                    <strong>Advanced Claude Code</strong> - Using PreToolUse, Stop, and SubagentStop hooks:
+                    <strong><a href="https://docs.anthropic.com/en/docs/claude-code/configuring#hooks" target="_blank">Claude Code</a></strong> - Configure hooks in settings:
                 </p>
 
                 <div class="code-block">

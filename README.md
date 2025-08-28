@@ -67,7 +67,7 @@ npx @probelabs/vow@latest install --claude  # Claude Code only
 ## 🎯 Use Cases
 
 ### Git Commit Hooks
-Prevent AI from committing without review:
+Prevent AI from committing without review. [Learn more about Git hooks](https://git-scm.com/docs/githooks):
 
 **Automatic Installation** (Recommended):
 ```bash
@@ -79,13 +79,13 @@ npx @probelabs/vow@latest install --git
 # Add this one-liner to your existing pre-commit hook:
 npx @probelabs/vow@latest check || exit 1
 
-# Or for Husky v9 (recommended):
+# Or for Husky v9 (recommended): https://typicode.github.io/husky/
 npx husky init
 echo 'npx @probelabs/vow@latest check' >> .husky/pre-commit
 ```
 
 ### Claude Code Integration
-Vow automatically configures Claude Code settings with intelligent scope selection:
+Vow automatically configures Claude Code settings with intelligent scope selection. [Learn more about Claude Code hooks](https://docs.anthropic.com/en/docs/claude-code/configuring#hooks):
 
 ```bash
 # Interactive installation with scope choice
@@ -96,17 +96,8 @@ npx @probelabs/vow@latest install
 # • Project (settings.json) - affects all users of this project
 ```
 
-**Manual Configuration Examples:**
+**Manual Configuration:**
 
-*Basic git commit hook (recommended):*
-```json
-// .claude/settings.local.json (recommended)
-{
-  "gitCommitHook": "npx @probelabs/vow@latest check"
-}
-```
-
-*Advanced hooks (PreToolUse, Stop, SubagentStop):*
 ```json
 // .claude/settings.local.json or .claude/settings.json
 {
@@ -275,7 +266,7 @@ Vow automatically detects:
 - ✅ Bare repositories
 
 ### Hook Managers
-- ✅ **Husky** v4, v8, v9 (with v9 simplified syntax)
+- ✅ **[Husky](https://typicode.github.io/husky/)** v4, v8, v9 (with v9 simplified syntax)
 - ✅ **pre-commit** framework
 - ✅ **lefthook**
 - ✅ **simple-git-hooks**
