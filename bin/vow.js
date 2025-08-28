@@ -42,10 +42,66 @@ function getVowContent() {
 }
 
 function checkVow(options = {}) {
-  const { hookMode = false, hookType = null } = options;
+  const { hookMode = false, hookType = null, debug = false } = options;
   const repo = getRepoRoot();
   const consentFile = path.join(repo, '.vow-consent');
   const challengeFile = path.join(repo, '.vow-challenge');
+  
+  // Handle PreToolUseGit - read from stdin and filter for git commits
+  if (hookType === 'PreToolUseGit') {
+    let stdinData = '';
+    try {
+      stdinData = fs.readFileSync(0, 'utf8'); // Read from stdin
+      const hookInput = JSON.parse(stdinData);
+      
+      // Debug logging
+      if (debug || process.env.VOW_DEBUG) {
+        const debugFile = path.join(repo, '.vow-debug.log');
+        const timestamp = new Date().toISOString();
+        const debugEntry = `[${timestamp}] Hook Type: ${hookType}, Hook Mode: ${hookMode}\nSTDIN: ${stdinData}\n---\n`;
+        
+        try {
+          fs.appendFileSync(debugFile, debugEntry);
+        } catch (e) {
+          // Ignore debug write errors
+        }
+      }
+      
+      // Check if this is a Bash git commit command
+      const toolName = hookInput.tool_name || '';
+      const command = (hookInput.tool_input || {}).command || '';
+      
+      if (toolName !== 'Bash' || !command.startsWith('git commit')) {
+        // Not a git commit, allow it
+        if (hookMode) {
+          console.log(JSON.stringify({ continue: true }));
+        }
+        return 0;
+      }
+      
+      // This is a git commit, proceed with vow check
+    } catch (e) {
+      // Error reading/parsing stdin, allow by default
+      if (hookMode) {
+        console.log(JSON.stringify({ continue: true }));
+      }
+      return 0;
+    }
+  }
+  
+  // Debug logging for other hook types
+  if ((debug || process.env.VOW_DEBUG) && hookType !== 'PreToolUseGit') {
+    const debugFile = path.join(repo, '.vow-debug.log');
+    const timestamp = new Date().toISOString();
+    const claudeToolInput = process.env.CLAUDE_TOOL_INPUT || 'undefined';
+    const debugEntry = `[${timestamp}] Hook Type: ${hookType || 'none'}, Hook Mode: ${hookMode}\nCLAUDE_TOOL_INPUT: ${claudeToolInput}\n---\n`;
+    
+    try {
+      fs.appendFileSync(debugFile, debugEntry);
+    } catch (e) {
+      // Ignore debug write errors
+    }
+  }
   
   // Get vow content (either local or default)
   let vowContent = getVowContent();
@@ -107,19 +163,9 @@ function checkVow(options = {}) {
       
       const fullRulesContent = header + vowContent + footer;
       
-      const response = { 
-        continue: true
-      };
-      
-      if (hookType === 'PreToolUse') {
-        response.hookSpecificOutput = { 
-          permissionDecision: 'deny',
-          permissionDecisionReason: fullRulesContent
-        };
-      }
-      
-      console.log(JSON.stringify(response));
-      return 2; // Exit code 2 for blocking error
+      // For denial: Use exit code 2 + stderr (no JSON output)
+      process.stderr.write(fullRulesContent);
+      return 2; // Exit code 2 blocks the tool call
     }
     
     // Build the complete output with header, content, and footer for non-hook mode
@@ -203,7 +249,10 @@ function checkVow(options = {}) {
   if (hookMode) {
     const response = { continue: true };
     if (hookType === 'PreToolUse') {
-      response.hookSpecificOutput = { permissionDecision: 'allow' };
+      response.hookSpecificOutput = { 
+        permissionDecision: 'allow',
+        hookEventName: 'PreToolUse'
+      };
     }
     console.log(JSON.stringify(response));
   }
@@ -331,8 +380,9 @@ function main() {
     const hookMode = args.includes('--hook');
     const hookTypeArg = args.find(arg => arg.startsWith('--hook-type='));
     const hookType = hookTypeArg ? hookTypeArg.split('=')[1] : null;
+    const debug = args.includes('--debug');
     
-    const exitCode = checkVow({ hookMode, hookType });
+    const exitCode = checkVow({ hookMode, hookType, debug });
     process.exit(exitCode);
   }
   
