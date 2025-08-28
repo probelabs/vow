@@ -157,7 +157,7 @@
                 </p>
 
                 <div class="code-block">
-                    <pre><code>npx @probelabs/vow@latest</code></pre>
+                    <pre><code>npx -y @probelabs/vow@latest</code></pre>
                 </div>
 
                 <p class="prose">
@@ -176,7 +176,7 @@
                 </p>
 
                 <div class="code-block">
-                    <pre><code>npx @probelabs/vow@latest check || exit 1</code></pre>
+                    <pre><code>npx -y @probelabs/vow@latest check || exit 1</code></pre>
                 </div>
 
                 <p class="prose">
@@ -188,7 +188,7 @@
 npx husky init
 
 # Add Vow to the pre-commit hook
-echo 'npx @probelabs/vow@latest check' >> .husky/pre-commit</code></pre>
+echo 'npx -y @probelabs/vow@latest check' >> .husky/pre-commit</code></pre>
                 </div>
 
                 <p class="prose">
@@ -204,7 +204,7 @@ echo 'npx @probelabs/vow@latest check' >> .husky/pre-commit</code></pre>
         "hooks": [
           {
             "type": "command",
-            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | jq -r '.command' | grep -q '^git commit'; then npx @probelabs/vow@latest check; fi"
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | jq -r '.command' | grep -q '^git commit'; then npx -y @probelabs/vow@latest check; fi"
           }
         ]
       }
@@ -214,7 +214,7 @@ echo 'npx @probelabs/vow@latest check' >> .husky/pre-commit</code></pre>
         "hooks": [
           {
             "type": "command",
-            "command": "npx @probelabs/vow@latest check"
+            "command": "npx -y @probelabs/vow@latest check"
           }
         ]
       }
@@ -224,7 +224,7 @@ echo 'npx @probelabs/vow@latest check' >> .husky/pre-commit</code></pre>
         "hooks": [
           {
             "type": "command",
-            "command": "npx @probelabs/vow@latest check"
+            "command": "npx -y @probelabs/vow@latest check"
           }
         ]
       }

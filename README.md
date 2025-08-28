@@ -23,7 +23,7 @@ Vow ensures AI agents pause and honestly self-review before taking action. No sh
 ### Interactive Installation (Recommended)
 
 ```bash
-npx @probelabs/vow@latest install
+npx -y @probelabs/vow@latest install
 ```
 
 This will:
@@ -37,12 +37,12 @@ This will:
 
 ```bash
 # Auto-detect and install everywhere applicable
-npx @probelabs/vow@latest install --yes
+npx -y @probelabs/vow@latest install --yes
 
 # Install only in specific locations
-npx @probelabs/vow@latest install --git     # Git hooks only
-npx @probelabs/vow@latest install --husky   # Husky only
-npx @probelabs/vow@latest install --claude  # Claude Code only
+npx -y @probelabs/vow@latest install --git     # Git hooks only
+npx -y @probelabs/vow@latest install --husky   # Husky only
+npx -y @probelabs/vow@latest install --claude  # Claude Code only
 ```
 
 ## 📖 How It Works
@@ -71,17 +71,17 @@ Prevent AI from committing without review. [Learn more about Git hooks](https://
 
 **Automatic Installation** (Recommended):
 ```bash
-npx @probelabs/vow@latest install --git
+npx -y @probelabs/vow@latest install --git
 ```
 
 **Manual Installation**:
 ```bash
 # Add this one-liner to your existing pre-commit hook:
-npx @probelabs/vow@latest check || exit 1
+npx -y @probelabs/vow@latest check || exit 1
 
 # Or for Husky v9 (recommended): https://typicode.github.io/husky/
 npx husky init
-echo 'npx @probelabs/vow@latest check' >> .husky/pre-commit
+echo 'npx -y @probelabs/vow@latest check' >> .husky/pre-commit
 ```
 
 ### Claude Code Integration
@@ -89,7 +89,7 @@ Vow automatically configures Claude Code settings with intelligent scope selecti
 
 ```bash
 # Interactive installation with scope choice
-npx @probelabs/vow@latest install
+npx -y @probelabs/vow@latest install
 
 # Choose between:
 # • Local (settings.local.json) - affects only your user account
@@ -108,7 +108,7 @@ npx @probelabs/vow@latest install
         "hooks": [
           {
             "type": "command",
-            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | jq -r '.command' | grep -q '^git commit'; then npx @probelabs/vow@latest check; fi"
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | jq -r '.command' | grep -q '^git commit'; then npx -y @probelabs/vow@latest check; fi"
           }
         ]
       }
@@ -118,7 +118,7 @@ npx @probelabs/vow@latest install
         "hooks": [
           {
             "type": "command",
-            "command": "npx @probelabs/vow@latest check"
+            "command": "npx -y @probelabs/vow@latest check"
           }
         ]
       }
@@ -128,7 +128,7 @@ npx @probelabs/vow@latest install
         "hooks": [
           {
             "type": "command",
-            "command": "npx @probelabs/vow@latest check"
+            "command": "npx -y @probelabs/vow@latest check"
           }
         ]
       }
@@ -142,7 +142,7 @@ Use in any workflow where AI accountability matters:
 
 ```bash
 # In your CI/CD pipeline
-npx @probelabs/vow@latest check || exit 1
+npx -y @probelabs/vow@latest check || exit 1
 ```
 
 ## 📝 Custom Vows
@@ -154,7 +154,7 @@ Vow works out of the box with built-in defaults, but you can customize the accou
 See what rules are currently active (local AGENT_VOW.md or package default):
 
 ```bash
-npx @probelabs/vow@latest rules
+npx -y @probelabs/vow@latest rules
 ```
 
 ### Create Custom Rules
@@ -162,7 +162,7 @@ npx @probelabs/vow@latest rules
 **Step 1: Generate starting template**
 ```bash
 # Export current rules to a file as your starting point
-npx @probelabs/vow@latest rules > AGENT_VOW.md
+npx -y @probelabs/vow@latest rules > AGENT_VOW.md
 ```
 
 **Step 2: Customize the rules**
@@ -209,7 +209,7 @@ Remove your custom rules to return to built-in defaults:
 
 ```bash
 rm AGENT_VOW.md
-npx @probelabs/vow@latest check  # Now uses built-in defaults again
+npx -y @probelabs/vow@latest check  # Now uses built-in defaults again
 ```
 
 ## 🎮 Commands
@@ -218,21 +218,21 @@ npx @probelabs/vow@latest check  # Now uses built-in defaults again
 Interactive installation wizard. This is the default command for setup.
 
 ```bash
-npx @probelabs/vow@latest  # Interactive installation (same as vow install)
+npx -y @probelabs/vow@latest  # Interactive installation (same as vow install)
 ```
 
-### `npx @probelabs/vow@latest check`
+### `npx -y @probelabs/vow@latest check`
 Check if AI has taken the vow. This command runs in git hooks.
 
 ```bash
-npx @probelabs/vow@latest check  # Returns exit code 1 if vow not taken, 0 if taken
+npx -y @probelabs/vow@latest check  # Returns exit code 1 if vow not taken, 0 if taken
 ```
 
 ### `vow install`
 Interactive installation wizard with smart detection.
 
 ```bash
-npx @probelabs/vow@latest install [options]
+npx -y @probelabs/vow@latest install [options]
 
 Options:
   -y, --yes        Non-interactive mode (auto-detect and install)
@@ -247,11 +247,11 @@ Options:
   -v, --verbose    Show detailed output
 ```
 
-### `npx @probelabs/vow@latest rules`
+### `npx -y @probelabs/vow@latest rules`
 Display the current rules being used (local AGENT_VOW.md or package default).
 
 ```bash
-npx @probelabs/vow@latest rules  # Shows the active accountability rules
+npx -y @probelabs/vow@latest rules  # Shows the active accountability rules
 ```
 
 ## 🔍 Detection Capabilities
@@ -309,7 +309,7 @@ Vow offers flexible configuration for Claude Code users:
 
 ```bash
 # Interactive installation shows scope options
-npx @probelabs/vow@latest install
+npx -y @probelabs/vow@latest install
 
 # When Claude Code is detected, you'll see:
 # ❯ Local (settings.local.json)    [Affects only your user account]
@@ -338,7 +338,7 @@ vow install
 Preview changes before installation:
 
 ```bash
-npx @probelabs/vow@latest install --dry-run
+npx -y @probelabs/vow@latest install --dry-run
 # Shows what would be changed without modifying files
 ```
 
@@ -357,15 +357,15 @@ Vow uses AGENT_VOW.md for accountability rules. If no local `AGENT_VOW.md` exist
 
 ```bash
 # View current rules (local or package default)
-npx @probelabs/vow@latest rules
+npx -y @probelabs/vow@latest rules
 
 # Create custom AGENT_VOW.md to override defaults
-npx @probelabs/vow@latest rules > AGENT_VOW.md
+npx -y @probelabs/vow@latest rules > AGENT_VOW.md
 # Then customize the generated file
 
 # Remove local rules to use package defaults again
 rm AGENT_VOW.md
-npx @probelabs/vow@latest check  # Uses package's AGENT_VOW.md
+npx -y @probelabs/vow@latest check  # Uses package's AGENT_VOW.md
 ```
 
 ## 🌐 Ecosystem
@@ -392,7 +392,7 @@ MIT © [Probe Labs](https://probelabs.com)
 
 2. Verify Vow installation:
    ```bash
-   npx @probelabs/vow@latest install --dry-run
+   npx -y @probelabs/vow@latest install --dry-run
    # Check detection results
    ```
 
