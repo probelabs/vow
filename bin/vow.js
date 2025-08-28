@@ -156,7 +156,8 @@ function checkVow(options = {}) {
                      'If you agree with all applicable items above:\n\n' +
                      '1. **Review**: Honestly evaluate yourself against each rule\n' +
                      '2. **Acknowledge**: Inform the user that you have reviewed the rules\n' +
-                     '3. **Consent**: Create a consent file with the validation code\n\n' +
+                     '3. **Consent**: Create a consent file with the validation code\n' +
+                     '4. **Retry**: After providing consent, retry the blocked command\n\n' +
                      `**VALIDATION CODE**: \`${validationCode}\`\n\n` +
                      `Create a file named \`.vow-consent\` containing exactly: \`${validationCode}\`\n\n` +
                      '⚠️ **IMPORTANT**: Never create .vow-consent in advance. Always evaluate yourself first!';
@@ -178,7 +179,8 @@ function checkVow(options = {}) {
                    'If you agree with all applicable items above:\n\n' +
                    '1. **Review**: Honestly evaluate yourself against each rule\n' +
                    '2. **Acknowledge**: Inform the user that you have reviewed the rules\n' +
-                   '3. **Consent**: Create a consent file with the validation code\n\n' +
+                   '3. **Consent**: Create a consent file with the validation code\n' +
+                   '4. **Retry**: After providing consent, retry the blocked command\n\n' +
                    `**VALIDATION CODE**: \`${validationCode}\`\n\n` +
                    `Create a file named \`.vow-consent\` containing exactly: \`${validationCode}\`\n\n` +
                    '⚠️ **IMPORTANT**: Never create .vow-consent in advance. Always evaluate yourself first!';
