@@ -31,7 +31,7 @@ This will:
 - Find existing hook managers (Husky, pre-commit, etc.)
 - Detect AI tools (Claude Code, Cursor)
 - Let you choose where to install Vow
-- Use built-in default rules (or local AGENT_VOW.md if it exists)
+- Uses AGENT_VOW.md for rules (local if exists, otherwise from package)
 
 ### Non-Interactive Installation
 
@@ -51,7 +51,7 @@ npx @probelabs/vow@latest install --claude  # Claude Code only
 
 1. **AI attempts an action** (e.g., git commit)
 2. **Vow intercepts** via configured hook
-3. **Rules are displayed** from AGENT_VOW.md (or defaults)
+3. **Rules are displayed** from AGENT_VOW.md
 4. **AI must self-assess** against each requirement
 5. **Consent required** - AI creates `.AGENT_CONSENT` file with '1'
 6. **Action proceeds** only after consent
@@ -62,7 +62,7 @@ npx @probelabs/vow@latest install --claude  # Claude Code only
 - **Exit Codes**: Returns 1 (block) if no consent, 0 (allow) if consent given
 - **Consent File**: `.AGENT_CONSENT` file created to indicate consent
 - **Auto-cleanup**: Consent file is removed after check
-- **Default Rules**: Built into npm package, used if no local AGENT_VOW.md
+- **Rules Source**: Uses local AGENT_VOW.md if exists, otherwise uses package's AGENT_VOW.md
 
 ## 🎯 Use Cases
 
@@ -151,7 +151,7 @@ Vow works out of the box with built-in defaults, but you can customize the accou
 
 ### View Current Rules
 
-See what rules are currently active (built-in defaults or your custom AGENT_VOW.md):
+See what rules are currently active (local AGENT_VOW.md or package default):
 
 ```bash
 npx @probelabs/vow@latest rules
@@ -248,7 +248,7 @@ Options:
 ```
 
 ### `npx @probelabs/vow@latest rules`
-Display the current npx @probelabs/vow@latest rules being used (local AGENT_VOW.md or default).
+Display the current rules being used (local AGENT_VOW.md or package default).
 
 ```bash
 npx @probelabs/vow@latest rules  # Shows the active accountability rules
@@ -351,21 +351,21 @@ vow install --uninstall
 # Cleanly removes Vow from git hooks, Husky, Claude Code, etc.
 ```
 
-### Default Rules
+### Rules System
 
-Vow includes built-in default rules in the package. If no local `AGENT_VOW.md` exists, the default rules are used automatically. This ensures AI accountability even in fresh clones without requiring file creation.
+Vow uses AGENT_VOW.md for accountability rules. If no local `AGENT_VOW.md` exists in your project, the package's default AGENT_VOW.md is used automatically. This ensures AI accountability even in fresh clones.
 
 ```bash
-# View current rules (built-in defaults or local AGENT_VOW.md)
+# View current rules (local or package default)
 npx @probelabs/vow@latest rules
 
 # Create custom AGENT_VOW.md to override defaults
 npx @probelabs/vow@latest rules > AGENT_VOW.md
 # Then customize the generated file
 
-# Remove local rules to use defaults again
+# Remove local rules to use package defaults again
 rm AGENT_VOW.md
-npx @probelabs/vow@latest check  # Uses built-in defaults
+npx @probelabs/vow@latest check  # Uses package's AGENT_VOW.md
 ```
 
 ## 🌐 Ecosystem

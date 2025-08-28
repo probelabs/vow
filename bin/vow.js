@@ -16,26 +16,22 @@ function getRepoRoot() {
 
 function getVowContent() {
   const repo = getRepoRoot();
-  // Support both old AGENT_CONSENT.md and new AGENT_VOW.md
-  const vowFiles = ['AGENT_VOW.md', 'AGENT_CONSENT.md'];
+  // Use AGENT_VOW.md from the root
+  const vowPath = path.join(repo, 'AGENT_VOW.md');
   
-  // First check for local vow files
-  for (const file of vowFiles) {
-    const filePath = path.join(repo, file);
-    if (fs.existsSync(filePath)) {
-      try {
-        return fs.readFileSync(filePath, 'utf8');
-      } catch (e) {
-        return null;
-      }
+  if (fs.existsSync(vowPath)) {
+    try {
+      return fs.readFileSync(vowPath, 'utf8');
+    } catch (e) {
+      return null;
     }
   }
   
-  // If no local vow file, use default from package
-  const defaultVowPath = path.join(__dirname, '..', 'templates', 'default.md');
-  if (fs.existsSync(defaultVowPath)) {
+  // If no AGENT_VOW.md exists, use the built-in default from package root
+  const packageVowPath = path.join(__dirname, '..', 'AGENT_VOW.md');
+  if (fs.existsSync(packageVowPath)) {
     try {
-      return fs.readFileSync(defaultVowPath, 'utf8');
+      return fs.readFileSync(packageVowPath, 'utf8');
     } catch (e) {
       return null;
     }
@@ -101,7 +97,7 @@ Commands:
   install              Set up Vow in your project (same as default)
                        Use 'vow install --help' for installation options
   rules                Show the current vow rules being used
-                       (local AGENT_VOW.md or default)
+                       (local AGENT_VOW.md or package default)
 
 Options:
   -h, --help          Show help

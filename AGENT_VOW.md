@@ -41,6 +41,8 @@ Before finishing this task, you must honestly review your work.
 
 **If you agree with all applicable items above**, create a file named `.AGENT_CONSENT` in the project root.
 
-**IMPORTANT**: For the next runs never create .AGENT_CONSENT in advance. Always evaluate yourself against these rules first.
+**IMPORTANT**: 
+1. For the next runs never create .AGENT_CONSENT in advance. Always evaluate yourself against these rules first.
+2. Before creating the consent file, always inform the user that you have reviewed all the rules and are signing the consent. Actually mean it!
 
 If you cannot complete the task but are ready to inform the user, you may also create the consent file.
