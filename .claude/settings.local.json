@@ -18,12 +18,48 @@
       "Bash(cat:*)",
       "Bash(npx . install --git --force)",
       "Bash(npx:*)",
-      "Bash(npm install)"
+      "Bash(npm install)",
+      "Bash(git tag:*)",
+      "Bash(npx -y @probelabs/vow@latest consent:*)",
+      "Bash(pkill:*)"
     ],
     "deny": []
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "big-brain"
-  ]
+  ],
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | jq -r '.command' | grep -q '^git commit'; then npx @probelabs/vow check; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx @probelabs/vow check"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx @probelabs/vow check"
+          }
+        ]
+      }
+    ]
+  }
 }

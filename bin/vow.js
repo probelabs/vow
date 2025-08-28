@@ -83,10 +83,7 @@ function checkVow() {
                    '2. **Acknowledge**: Inform the user that you have reviewed the rules\n' +
                    '3. **Consent**: Create a consent file with the validation code\n\n' +
                    `**VALIDATION CODE**: \`${validationCode}\`\n\n` +
-                   `To provide consent, write EXACTLY this code to the consent file:\n` +
-                   '```bash\n' +
-                   `echo '${validationCode}' > .vow-consent\n` +
-                   '```\n\n' +
+                   `Create a file named \`.vow-consent\` containing exactly: \`${validationCode}\`\n\n` +
                    '⚠️ **IMPORTANT**: Never create .vow-consent in advance. Always evaluate yourself first!';
     
     const fullOutput = header + vowContent + footer;
@@ -161,6 +158,7 @@ function showHelp() {
 Usage:
   vow                  Interactive installation wizard (default)
   vow check            Check if AI has taken the vow
+  vow consent <code>   Write validation code to consent file
   vow install          Interactive installation wizard
   vow rules            Display current vow rules
   vow --help           Show this help message
@@ -168,6 +166,7 @@ Usage:
 
 Commands:
   check                Check accountability and require consent
+  consent <code>       Write validation code to .vow-consent file
   install              Set up Vow in your project (same as default)
                        Use 'vow install --help' for installation options
   rules                Show the current vow rules being used
@@ -184,6 +183,9 @@ Examples:
   # Check vow accountability
   vow check
 
+  # Provide consent with validation code
+  vow consent 123
+
   # Install non-interactively
   vow install --yes
   
@@ -192,6 +194,26 @@ Examples:
 
 For more information, visit: https://probelabs.com/vow
 `);
+}
+
+function writeConsent(code) {
+  if (!code) {
+    console.error('Error: Validation code is required');
+    console.log('Usage: vow consent <code>');
+    return 1;
+  }
+  
+  const repo = getRepoRoot();
+  const consentFile = path.join(repo, '.vow-consent');
+  
+  try {
+    fs.writeFileSync(consentFile, code.toString(), 'utf8');
+    console.log(`✓ Consent provided with code: ${code}`);
+    return 0;
+  } catch (e) {
+    console.error(`Error writing consent file: ${e.message}`);
+    return 1;
+  }
 }
 
 function showVersion() {
@@ -221,6 +243,13 @@ function main() {
   // Check for explicit check command
   if (args[0] === 'check') {
     const exitCode = checkVow();
+    process.exit(exitCode);
+  }
+  
+  // Check for consent command
+  if (args[0] === 'consent') {
+    const code = args[1];
+    const exitCode = writeConsent(code);
     process.exit(exitCode);
   }
   

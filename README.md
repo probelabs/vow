@@ -228,6 +228,13 @@ Check if AI has taken the vow. This command runs in git hooks.
 npx -y @probelabs/vow@latest check  # Returns exit code 1 if vow not taken, 0 if taken
 ```
 
+### `npx -y @probelabs/vow@latest consent <code>`
+Write validation code to the consent file. This command is used by AI to provide consent after reviewing the rules.
+
+```bash
+npx -y @probelabs/vow@latest consent 123  # Writes "123" to .vow-consent file
+```
+
 ### `vow install`
 Interactive installation wizard with smart detection.
 
