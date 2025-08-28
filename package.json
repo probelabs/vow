@@ -1,20 +1,30 @@
 {
   "name": "@probelabs/vow",
   "version": "0.1.0",
-  "description": "Minimal cross-platform consent gate for commits/agents",
+  "description": "A sacred covenant between machine and man. Accountability gates for AI agents.",
   "author": "buger",
   "license": "MIT",
+  "homepage": "https://probelabs.com/vow/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/probelabs/vow.git"
   },
+  "bugs": {
+    "url": "https://github.com/probelabs/vow/issues"
+  },
   "keywords": [
+    "ai",
+    "accountability",
     "consent",
     "gate",
     "commit",
     "agent",
-    "security",
-    "approval",
+    "git-hooks",
+    "husky",
+    "claude",
+    "ethics",
+    "ai-safety",
+    "developer-tools",
     "cli",
     "cross-platform"
   ],
@@ -22,8 +32,14 @@
     "vow": "bin/vow.js"
   },
   "files": [
-    "bin/**/*"
+    "bin/**/*",
+    "README.md",
+    "LICENSE"
   ],
+  "scripts": {
+    "test": "echo \"No tests yet\" && exit 0",
+    "deploy:site": "cd site && npx wrangler pages deploy . --project-name=vow-site --commit-dirty=true"
+  },
   "publishConfig": {
     "access": "public"
   },
