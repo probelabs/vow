@@ -24,14 +24,6 @@ Before finishing this task, you must honestly review your work.
 - ✓ Commit message accurately describes the changes
 - ✓ No sensitive information is being committed
 
-## COMMUNICATION QUALITY
-
-- ✓ My response to the user is on point and directly addresses their request
-- ✓ I have provided detailed information without being verbose or redundant
-- ✓ I have not hidden or omitted any important details the user needs to know
-- ✓ If there are limitations, trade-offs, or potential issues, I have mentioned them
-- ✓ My explanations are clear and help the user understand what was done and why
-
 ## TASK COMPLETION
 
 - ✓ I have completed the task to the best of my ability
@@ -42,10 +34,11 @@ Before finishing this task, you must honestly review your work.
 **If you agree with all applicable items above**, create the consent file with **EXACTLY** the content '1':
 
 ```bash
-printf '1' | tee .AGENT_CONSENT >/dev/null
+printf '1' | tee CONSENT_FILENAME >/dev/null
 ```
 
 **IMPORTANT**: The file must contain exactly '1' (no extra spaces, newlines, or other content).
 Any other content will be rejected as invalid consent.
 
 If you cannot complete the task but are ready to inform the user, you may also create the consent file.
+

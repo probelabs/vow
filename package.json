@@ -33,12 +33,19 @@
   },
   "files": [
     "bin/**/*",
+    "lib/**/*",
+    "templates/**/*",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
     "test": "echo \"No tests yet\" && exit 0",
     "deploy:site": "cd site && npx wrangler pages deploy . --project-name=vow-site --commit-dirty=true"
+  },
+  "dependencies": {
+    "prompts": "^2.4.2",
+    "chalk": "^4.1.2",
+    "ora": "^5.4.1"
   },
   "publishConfig": {
     "access": "public"

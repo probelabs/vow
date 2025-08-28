@@ -4,6 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Website](https://img.shields.io/badge/website-probelabs.com%2Fvow-blue)](https://probelabs.com/vow/)
 
+![A pinky promise between robot and human representing the sacred covenant of AI accountability](site/assets/pinky-promise.jpg)
+
 > A sacred covenant between machine and man. Accountability gates for AI agents.
 
 Vow ensures AI agents pause and honestly self-review before taking action. No shortcuts. No lies. No claiming completion without actual completion.
@@ -18,38 +20,129 @@ Vow ensures AI agents pause and honestly self-review before taking action. No sh
 
 ## 🚀 Quick Start
 
-Run in any repository:
+### Interactive Installation (Recommended)
 
 ```bash
-npx -y @probelabs/vow
+npx @probelabs/vow@latest install
 ```
 
-This creates an `AGENT_VOW.md` with default accountability rules that AI agents must follow.
+This will:
+- Detect your git setup (including worktrees and custom hooks)
+- Find existing hook managers (Husky, pre-commit, etc.)
+- Detect AI tools (Claude Code, Cursor)
+- Let you choose where to install Vow
+- Use built-in default rules (or local AGENT_VOW.md if it exists)
+
+### Non-Interactive Installation
+
+```bash
+# Auto-detect and install everywhere applicable
+npx @probelabs/vow@latest install --yes
+
+# Install only in specific locations
+npx @probelabs/vow@latest install --git     # Git hooks only
+npx @probelabs/vow@latest install --husky   # Husky only
+npx @probelabs/vow@latest install --claude  # Claude Code only
+```
 
 ## 📖 How It Works
 
-1. **Define Rules** - Vow comes with default accountability rules, or create your own `AGENT_VOW.md`
-2. **AI Pauses** - When triggered (commits, task completion, etc.), AI must review its work
-3. **Honest Review** - AI checks each requirement and can only proceed if all are honestly met
-4. **Gate Opens** - Only after truthful self-assessment can the AI continue
+### The Flow
+
+1. **AI attempts an action** (e.g., git commit)
+2. **Vow intercepts** via configured hook
+3. **Rules are displayed** from AGENT_VOW.md (or defaults)
+4. **AI must self-assess** against each requirement
+5. **Consent required** - AI creates `.AGENT_CONSENT` file with '1'
+6. **Action proceeds** only after consent
+
+### Technical Details
+
+- **Hook Integration**: Vow installs as a git pre-commit hook or similar
+- **Exit Codes**: Returns 1 (block) if no consent, 0 (allow) if consent given
+- **Consent File**: `.AGENT_CONSENT` contains exactly '1' to indicate consent
+- **Auto-cleanup**: Consent file is removed after check
+- **Default Rules**: Built into npm package, used if no local AGENT_VOW.md
 
 ## 🎯 Use Cases
 
 ### Git Commit Hooks
 Prevent AI from committing without review:
 
-```json
-// .husky/pre-commit
-#!/bin/sh
-npx @probelabs/vow
+**Automatic Installation** (Recommended):
+```bash
+npx @probelabs/vow@latest install --git
+```
+
+**Manual Installation**:
+```bash
+# Add this one-liner to your existing pre-commit hook:
+npx @probelabs/vow@latest check || exit 1
+
+# Or for Husky v9 (recommended):
+npx husky init
+echo 'npx @probelabs/vow@latest check' >> .husky/pre-commit
 ```
 
 ### Claude Code Integration
-Add to `.claude/settings.json`:
+Vow automatically configures Claude Code settings with intelligent scope selection:
 
+```bash
+# Interactive installation with scope choice
+npx @probelabs/vow@latest install
+
+# Choose between:
+# • Local (settings.local.json) - affects only your user account
+# • Project (settings.json) - affects all users of this project
+```
+
+**Manual Configuration Examples:**
+
+*Basic git commit hook (recommended):*
 ```json
+// .claude/settings.local.json (recommended)
 {
-  "gitCommitHook": "npx @probelabs/vow"
+  "gitCommitHook": "npx @probelabs/vow@latest check"
+}
+```
+
+*Advanced hooks (PreToolUse, Stop, SubagentStop):*
+```json
+// .claude/settings.local.json or .claude/settings.json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | jq -r '.command' | grep -q '^git commit'; then npx @probelabs/vow@latest check; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx @probelabs/vow@latest check"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx @probelabs/vow@latest check"
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 
@@ -58,12 +151,31 @@ Use in any workflow where AI accountability matters:
 
 ```bash
 # In your CI/CD pipeline
-npx @probelabs/vow || exit 1
+npx @probelabs/vow@latest check || exit 1
 ```
 
 ## 📝 Custom Vows
 
-Create your own `AGENT_VOW.md` to override defaults:
+Vow works out of the box with built-in defaults, but you can customize the accountability rules for your specific project needs.
+
+### View Current Rules
+
+See what rules are currently active (built-in defaults or your custom AGENT_VOW.md):
+
+```bash
+npx @probelabs/vow@latest rules
+```
+
+### Create Custom Rules
+
+**Step 1: Generate starting template**
+```bash
+# Export current rules to a file as your starting point
+npx @probelabs/vow@latest rules > AGENT_VOW.md
+```
+
+**Step 2: Customize the rules**
+Edit `AGENT_VOW.md` to add your project-specific requirements:
 
 ```markdown
 # AGENT TASK COMPLETION CONSENT
@@ -71,12 +183,20 @@ Create your own `AGENT_VOW.md` to override defaults:
 Before finishing this task, you must honestly review your work.
 **Do not lie** - if any items below are not true, fix it.
 
-## YOUR CUSTOM RULES
-
+## TASK ADHERENCE
 - ✓ I have followed the task exactly
-- ✓ The code builds and tests pass
-- ✓ No sensitive data is exposed
-- ✓ Documentation is updated
+- ✓ I have not cut corners or taken shortcuts
+
+## CODE QUALITY (if code was modified)
+- ✓ The code builds successfully without errors
+- ✓ All tests pass and new tests are added where needed
+
+## PROJECT-SPECIFIC RULES
+- ✓ I have updated the changelog with my changes
+- ✓ Documentation reflects the new functionality
+- ✓ No sensitive API keys or credentials are exposed
+- ✓ Code follows the project's style guide
+- ✓ I have tested the changes in staging environment
 
 ---
 
@@ -85,6 +205,88 @@ Before finishing this task, you must honestly review your work.
 printf '1' | tee .AGENT_CONSENT >/dev/null
 \`\`\`
 ```
+
+**Step 3: Test your custom rules**
+```bash
+# Test that your custom rules work
+git commit --allow-empty -m "test custom rules"
+```
+
+### Reset to Defaults
+
+Remove your custom rules to return to built-in defaults:
+
+```bash
+rm AGENT_VOW.md
+npx @probelabs/vow@latest check  # Now uses built-in defaults again
+```
+
+## 🎮 Commands
+
+### `vow`
+Interactive installation wizard. This is the default command for setup.
+
+```bash
+npx @probelabs/vow@latest  # Interactive installation (same as vow install)
+```
+
+### `npx @probelabs/vow@latest check`
+Check if AI has taken the vow. This command runs in git hooks.
+
+```bash
+npx @probelabs/vow@latest check  # Returns exit code 1 if vow not taken, 0 if taken
+```
+
+### `vow install`
+Interactive installation wizard with smart detection.
+
+```bash
+npx @probelabs/vow@latest install [options]
+
+Options:
+  -y, --yes        Non-interactive mode (auto-detect and install)
+  --dry-run        Show what would be installed without making changes
+  --force          Force installation even if already installed
+  --global         Install globally for all git repositories
+  --git            Install only git hooks
+  --husky          Install only Husky hooks
+  --claude         Install only Claude Code settings
+  --all            Install in all detected locations
+  --uninstall      Remove Vow from all locations
+  -v, --verbose    Show detailed output
+```
+
+### `npx @probelabs/vow@latest rules`
+Display the current npx @probelabs/vow@latest rules being used (local AGENT_VOW.md or default).
+
+```bash
+npx @probelabs/vow@latest rules  # Shows the active accountability rules
+```
+
+## 🔍 Detection Capabilities
+
+Vow automatically detects:
+
+### Git Configurations
+- ✅ Standard git repositories
+- ✅ Git worktrees (with main repo detection)
+- ✅ Custom hooks directories (`core.hooksPath`)
+- ✅ Global git hooks
+- ✅ Bare repositories
+
+### Hook Managers
+- ✅ **Husky** v4, v8, v9 (with v9 simplified syntax)
+- ✅ **pre-commit** framework
+- ✅ **lefthook**
+- ✅ **simple-git-hooks**
+
+### AI Tools
+- ✅ **Claude Code** with comprehensive hook support:
+  - Basic `gitCommitHook` configuration
+  - Advanced `PreToolUse`, `Stop`, `SubagentStop` hooks
+  - Intelligent scope selection (local vs project settings)
+- ✅ **Cursor AI** (`.cursor/`)
+- ✅ Custom AI tool configurations
 
 ## 🏛️ Philosophy
 
@@ -95,33 +297,84 @@ printf '1' | tee .AGENT_CONSENT >/dev/null
 
 Vow brings stoic principles to AI development. It's not about controlling AI—it's about AI learning to control itself through honest self-reflection.
 
-## 🔧 API
+## 🛠️ Advanced Usage
 
-### CLI Commands
+### Git Worktrees
+
+Vow intelligently handles git worktrees:
 
 ```bash
-# Run with default vow
-npx @probelabs/vow
+# In a worktree, Vow detects:
+# - Main repository location
+# - Worktree-specific configuration
+# - Shared hooks directory
 
-# Check if vow exists (exit code 0 if yes)
-npx @probelabs/vow --check
-
-# Initialize new vow file
-npx @probelabs/vow --init
+vow install  # Will offer options for worktree-only or main repo
 ```
 
-### Programmatic Usage
+### Claude Code Scope Selection
 
-```javascript
-const vow = require('@probelabs/vow');
+Vow offers flexible configuration for Claude Code users:
 
-// Check if agent has taken the vow
-if (vow.check()) {
-  // Proceed with task
-}
+```bash
+# Interactive installation shows scope options
+npx @probelabs/vow@latest install
 
-// Enforce vow
-vow.enforce(); // Exits if vow not taken
+# When Claude Code is detected, you'll see:
+# ❯ Local (settings.local.json)    [Affects only your user account]
+#   Project (settings.json)        [Affects all users of this project]
+```
+
+**Scope Details:**
+- **Local** (`.claude/settings.local.json`) - User-specific settings that don't affect other team members
+- **Project** (`.claude/settings.json`) - Shared settings that apply to all project contributors
+- **Default**: Local scope is recommended for individual accountability
+
+### Custom Hooks Directory
+
+If you use a custom hooks directory:
+
+```bash
+# Set custom hooks path
+git config core.hooksPath ~/.git-hooks
+
+# Vow will detect and install there
+vow install
+```
+
+### Dry Run Mode
+
+Preview changes before installation:
+
+```bash
+npx @probelabs/vow@latest install --dry-run
+# Shows what would be changed without modifying files
+```
+
+### Uninstalling
+
+Remove Vow from all locations:
+
+```bash
+vow install --uninstall
+# Cleanly removes Vow from git hooks, Husky, Claude Code, etc.
+```
+
+### Default Rules
+
+Vow includes built-in default rules in the package. If no local `AGENT_VOW.md` exists, the default rules are used automatically. This ensures AI accountability even in fresh clones without requiring file creation.
+
+```bash
+# View current rules (built-in defaults or local AGENT_VOW.md)
+npx @probelabs/vow@latest rules
+
+# Create custom AGENT_VOW.md to override defaults
+npx @probelabs/vow@latest rules > AGENT_VOW.md
+# Then customize the generated file
+
+# Remove local rules to use defaults again
+rm AGENT_VOW.md
+npx @probelabs/vow@latest check  # Uses built-in defaults
 ```
 
 ## 🌐 Ecosystem
@@ -135,6 +388,64 @@ Part of the **[Probe Labs](https://probelabs.com)** ecosystem—tools dedicated 
 ## 📄 License
 
 MIT © [Probe Labs](https://probelabs.com)
+
+## 🔧 Troubleshooting
+
+### Vow not triggering in git hooks
+
+1. Check if hooks are executable:
+   ```bash
+   ls -la .git/hooks/pre-commit
+   # Should show executable permissions (x)
+   ```
+
+2. Verify Vow installation:
+   ```bash
+   npx @probelabs/vow@latest install --dry-run
+   # Check detection results
+   ```
+
+3. For custom hooks directories:
+   ```bash
+   git config core.hooksPath
+   # Ensure Vow is installed in the correct directory
+   ```
+
+### Worktree issues
+
+If Vow isn't working in a worktree:
+
+```bash
+# Check worktree configuration
+git worktree list
+
+# Reinstall for the main repository
+cd $(git rev-parse --git-common-dir)/..
+vow install
+```
+
+### Claude Code not detecting
+
+Vow prioritizes `.claude/settings.local.json` over `.claude/settings.json`. Ensure your settings file exists and is valid JSON:
+
+```bash
+# Check local settings (user-specific)
+cat .claude/settings.local.json | jq .
+
+# Or check project settings (shared)
+cat .claude/settings.json | jq .
+
+# Reinstall with scope selection
+vow install --claude --force
+```
+
+## 🔌 Compatibility
+
+- **Node.js**: v14 or higher
+- **Git**: v2.0 or higher
+- **Operating Systems**: macOS, Linux, Windows (with Git Bash)
+- **Hook Managers**: Husky v4-v9, pre-commit, lefthook, simple-git-hooks
+- **AI Tools**: Claude Code, Cursor AI, GitHub Copilot
 
 ## 🤝 Contributing
 

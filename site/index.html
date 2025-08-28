@@ -1,9 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vow — A Sacred Covenant Between Machine and Man</title>
+    
+    <!-- SEO Meta Tags -->
+    <title>Vow - AI Accountability Gates for Git Commits and Agent Tasks</title>
+    <meta name="description" content="Vow ensures AI agents pause and honestly self-review before taking action. Accountability gates for git commits, Claude Code, Husky hooks. No shortcuts, no lies, no claiming completion without actual completion.">
+    <meta name="keywords" content="AI accountability, git hooks, pre-commit, Claude Code, AI agents, code quality, accountability gates, Husky, AI ethics, developer tools">
+    <meta name="author" content="Probe Labs">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://probelabs.com/vow/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://probelabs.com/vow/">
+    <meta property="og:title" content="Vow - AI Accountability Gates">
+    <meta property="og:description" content="Ensure AI agents honestly self-review before taking action. Accountability gates for git commits, agent tasks, and any AI trigger. No shortcuts, no lies.">
+    <meta property="og:image" content="https://probelabs.com/vow/assets/pinky-promise.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="A pinky promise between robot and human representing the sacred covenant of AI accountability">
+    <meta property="og:site_name" content="Probe Labs">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://probelabs.com/vow/">
+    <meta name="twitter:title" content="Vow - AI Accountability Gates">
+    <meta name="twitter:description" content="Ensure AI agents honestly self-review before taking action. Accountability gates for git commits, agent tasks, and any AI trigger.">
+    <meta name="twitter:image" content="https://probelabs.com/vow/assets/pinky-promise.jpg">
+    <meta name="twitter:image:alt" content="A pinky promise between robot and human representing AI accountability">
+    <meta name="twitter:creator" content="@probelabs">
+    <meta name="twitter:site" content="@probelabs">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="msapplication-TileColor" content="#2c3e50">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Vow">
+    
+    <!-- Performance -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Vow",
+        "description": "AI accountability gates for git commits and agent tasks. Ensures AI agents pause and honestly self-review before taking action.",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Cross-platform",
+        "author": {
+            "@type": "Organization",
+            "name": "Probe Labs",
+            "url": "https://probelabs.com"
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "downloadUrl": "https://www.npmjs.com/package/@probelabs/vow",
+        "softwareVersion": "1.0",
+        "url": "https://probelabs.com/vow/",
+        "image": "https://probelabs.com/vow/assets/pinky-promise.jpg",
+        "screenshot": "https://probelabs.com/vow/assets/pinky-promise.jpg"
+    }
+    </script>
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,10 +100,10 @@
         </header>
 
         <section class="promise-image">
-            <img src="assets/pinky-promise.jpg" alt="A pinky promise between robot and human" />
+            <img src="assets/pinky-promise.jpg" alt="A pinky promise between robot and human representing the sacred covenant of AI accountability" loading="lazy" width="800" height="600" />
         </section>
 
-        <section class="vow-text">
+        <article class="vow-text">
             <h2>The Solemn Oath</h2>
             <div class="vow-content">
                 <p class="ornament">❦</p>
@@ -52,53 +130,149 @@
                     </p>
                 </div>
             </div>
-        </section>
+        </article>
 
-        <section class="installation">
+        <article class="installation">
             <h2>How It Works</h2>
             
             <div class="instructions">
-                <p class="prose">
-                    Vow comes with a default set of accountability rules. When an AI agent attempts to make changes—whether committing code, completing tasks, or any trigger you configure—it must first take the vow.
-                </p>
+                <div class="flow-steps">
+                    <p><strong>1. AI attempts an action</strong> (like git commit, or Agent finishing work and responding to user)</p>
+                    <p><strong>2. Vow intercepts</strong> via a configured hook</p>
+                    <p><strong>3. Rules are displayed</strong> from AGENT_VOW.md (or defaults)</p>
+                    <p><strong>4. AI must self-assess</strong> against each requirement</p>
+                    <p><strong>5. Consent required</strong> - AI signs the consent form</p>
+                    <p><strong>6. Action proceeds</strong> only after consent</p>
+                </div>
 
                 <p class="prose">
-                    The AI pauses, reviews its work against the checklist, and can only proceed if it honestly affirms each requirement. You can override the default rules by creating your own AGENT_VOW.md file with custom requirements.
+                    Vow installs non-invasively—it creates separate hook files that run at the end of your existing pipeline, never modifying your current hooks.
                 </p>
 
-                <h3>Installation</h3>
+                <h3>Quick Install</h3>
                 
                 <p class="prose">
                     Run this in your repository folder:
                 </p>
 
                 <div class="code-block">
-                    <pre><code>npx -y @probelabs/vow</code></pre>
+                    <pre><code>npx @probelabs/vow@latest</code></pre>
                 </div>
 
-                <h3>Integration</h3>
+                <p class="prose">
+                    This starts an interactive installer that detects your git setup, hook managers (Husky, etc.), and AI tools (Claude Code) then offers:</p>
+
+                <ul class="prose">
+                    <li><strong>Install everywhere (recommended)</strong> - One-click setup</li>
+                    <li><strong>Individual targets</strong> - Git hooks, Husky, Claude Code separately</li>  
+                    <li><strong>Manual installation</strong> - Copy-paste commands</li>
+                </ul>
+
+                <h3>Manual Setup</h3>
                 
                 <p class="prose">
-                    Vow works seamlessly with git hooks, Husky, and Claude Code hooks. Configure it as a pre-commit hook, a task completion gate, or any custom trigger point where AI accountability matters.
+                    <strong>Git Hooks</strong> - Add to any existing pre-commit hook:
                 </p>
 
+                <div class="code-block">
+                    <pre><code>npx @probelabs/vow@latest check || exit 1</code></pre>
+                </div>
+
                 <p class="prose">
-                    For detailed setup and configuration, see the <a href="https://github.com/probelabs/vow">repository</a>.
+                    <strong>Husky</strong> - For projects using Husky v9 (recommended):
+                </p>
+
+                <div class="code-block">
+                    <pre><code># Initialize Husky (creates .husky/pre-commit automatically)
+npx husky init
+
+# Add Vow to the pre-commit hook
+echo 'npx @probelabs/vow@latest check' >> .husky/pre-commit</code></pre>
+                </div>
+
+                <p class="prose">
+                    <strong>Claude Code</strong> - Add git commit hook to settings:
+                </p>
+
+                <div class="code-block">
+                    <pre><code># Local settings (recommended)
+# .claude/settings.local.json
+{
+  "gitCommitHook": "npx @probelabs/vow@latest check"
+}
+
+# Or project-wide settings
+# .claude/settings.json  
+{
+  "gitCommitHook": "npx @probelabs/vow@latest check"
+}</code></pre>
+                </div>
+
+                <p class="prose">
+                    <strong>Advanced Claude Code</strong> - Using PreToolUse, Stop, and SubagentStop hooks:
+                </p>
+
+                <div class="code-block">
+                    <pre><code>{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" | jq -r '.command' | grep -q '^git commit'; then npx @probelabs/vow@latest check; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx @probelabs/vow@latest check"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx @probelabs/vow@latest check"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+                </div>
+
+                <h3>Commands</h3>
+                
+                <p class="prose">
+                    <strong>vow</strong> - Interactive installation wizard (default)<br>
+                    <strong>vow check</strong> - Accountability check (used in hooks)<br>
+                    <strong>vow rules</strong> - Display current vow rules
                 </p>
             </div>
-        </section>
+        </article>
 
         <section class="probe-ecosystem">
             <div class="probe-content">
-                <img src="assets/probe-logo.jpeg" alt="Probe" class="probe-logo" />
+                <a href="https://probelabs.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Probe Labs website">
+                    <img src="assets/probe-logo.jpeg" alt="Probe Labs logo" class="probe-logo" />
+                </a>
                 <div class="probe-text">
                     <h3>Built on Probe's Foundation</h3>
                     <p>
-                        Vow is part of the Probe ecosystem—tools dedicated to improving human and AI collaboration in engineering. 
+                        Vow is part of the <a href="https://probelabs.com" target="_blank" rel="noopener noreferrer">Probe ecosystem</a>—tools dedicated to improving human and AI collaboration in engineering. 
                         Where Probe helps AI understand code context, Vow ensures AI remains accountable to human judgment.
                     </p>
                     <p>
-                        Questions? Reach out at <a href="mailto:hello@probelabs.com">hello@probelabs.com</a>
+                        Learn more at <a href="https://probelabs.com" target="_blank" rel="noopener noreferrer">probelabs.com</a> or reach out at <a href="mailto:hello@probelabs.com">hello@probelabs.com</a>
                     </p>
                 </div>
             </div>

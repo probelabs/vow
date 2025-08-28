@@ -136,6 +136,35 @@ header {
     font-size: 1.05rem;
 }
 
+ul.prose {
+    text-indent: 0;
+    text-align: left;
+    padding-left: 2rem;
+}
+
+ul.prose li {
+    margin: 0.5rem 0;
+    line-height: 1.6;
+}
+
+.flow-steps {
+    text-indent: 0;
+    margin: 2rem 0;
+}
+
+.flow-steps p {
+    margin: 1rem 0;
+    text-indent: 0;
+    text-align: left;
+    line-height: 1.6;
+    font-size: 1.05rem;
+}
+
+.installation .prose {
+    text-indent: 0;
+    text-align: left;
+}
+
 .declaration {
     margin: 4rem 0;
     padding: 3rem 2rem 0rem 2rem;
@@ -272,6 +301,7 @@ header {
     gap: 2rem;
     max-width: 600px;
     margin: 0 auto;
+    flex-direction: row-reverse;
 }
 
 .probe-logo {
@@ -279,6 +309,24 @@ header {
     height: 80px;
     object-fit: contain;
     flex-shrink: 0;
+    border-radius: 12px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.probe-content a:hover .probe-logo {
+    opacity: 0.8;
+    transform: scale(1.02);
+}
+
+.probe-content a:focus .probe-logo {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.probe-content a {
+    text-decoration: none;
+    border-radius: 12px;
+    display: inline-block;
 }
 
 .probe-text h3 {
@@ -299,7 +347,11 @@ header {
 .probe-text a {
     color: var(--text-primary);
     text-decoration: none;
-    border-bottom: 1px solid var(--text-primary);
+    font-weight: 600;
+}
+
+.probe-text a:hover {
+    text-decoration: underline;
 }
 
 .probe-text a:hover {

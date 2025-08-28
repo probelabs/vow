@@ -1,45 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Read(/Users/leonidbugaev/go/src/**)",
-      "Read(/Users/leonidbugaev/go/src/**)",
-      "Read(/Users/leonidbugaev/go/src/**)",
-      "Read(/Users/leonidbugaev/go/src/**)",
-      "Read(/Users/leonidbugaev/go/src/probe-docs-mcp/**)",
-      "Read(/Users/leonidbugaev/go/src/airlock/**)",
-      "Read(/Users/leonidbugaev/go/src/**)",
-      "Bash(mkdir:*)",
-      "Write",
-      "Bash(open:*)",
       "Edit",
-      "mcp__big-brain__ask_big_brain",
-      "Read(/Users/leonidbugaev/Documents/Cline/MCP/big-brain/site/**)",
-      "Read(/Users/leonidbugaev/Documents/Cline/MCP/big-brain/site/**)",
-      "Read(/Users/leonidbugaev/Documents/Cline/MCP/big-brain/**)",
-      "Read(/Users/leonidbugaev/Documents/Cline/MCP/big-brain/**)",
-      "Read(/Users/leonidbugaev/Documents/Cline/MCP/big-brain/**)",
-      "Bash(npx wrangler pages deploy:*)",
-      "Bash(npx wrangler pages project create:*)",
-      "Bash(npx:*)",
-      "Bash(cd:*)",
-      "Bash(ls:*)",
-      "Bash(touch:*)",
-      "Bash(pwd:*)",
-      "Bash(echo:*)",
-      "Bash(git add:*)",
-      "Bash(git status:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git commit:*)"
+      "WebSearch",
+      "WebFetch(domain:typicode.github.io)"
     ],
-    "deny": [],
-    "ask": [],
-    "additionalDirectories": [
-      "/Users/leonidbugaev/Downloads"
-    ]
-  },
-  "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "big-brain"
-  ]
+    "deny": []
+  }
 }
