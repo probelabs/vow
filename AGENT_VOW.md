@@ -1,8 +1,3 @@
-# AGENT TASK COMPLETION CONSENT
-
-Before finishing this task, you must honestly review your work.
-**Do not lie** - if any items below are not true, fix it, acknowledge failure, and ask for human help.
-
 ## TASK ADHERENCE
 
 - ✓ I have followed the task provided to me exactly (double-checked)
@@ -36,13 +31,3 @@ Before finishing this task, you must honestly review your work.
 
 - ✓ I have completed the task to the best of my ability
 - ✓ If I cannot complete the task, I am ready to explain why to the user
-
----
-
-**If you agree with all applicable items above**, create a file named `.AGENT_CONSENT` in the project root.
-
-**IMPORTANT**: 
-1. For the next runs never create .AGENT_CONSENT in advance. Always evaluate yourself against these rules first.
-2. Before creating the consent file, always inform the user that you have reviewed all the rules and are signing the consent. Actually mean it!
-
-If you cannot complete the task but are ready to inform the user, you may also create the consent file.

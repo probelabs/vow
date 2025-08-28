@@ -11,13 +11,19 @@
       "Bash(npm run:*)",
       "Bash(ls:*)",
       "Bash(grep:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(npx . install --claude --dry-run --verbose)",
+      "Bash(npm test)",
+      "Bash(npx . install --claude --force)",
+      "Bash(cat:*)",
+      "Bash(npx . install --git --force)",
+      "Bash(npx:*)",
+      "Bash(npm install)"
     ],
     "deny": []
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "big-brain"
-  ],
-  "gitCommitHook": "npx @probelabs/vow check"
+  ]
 }

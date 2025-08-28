@@ -83,6 +83,17 @@ async function performInstallation(targets, detection, options, selection = {}) 
   
   // Note: AGENT_VOW.md is now optional - uses built-in defaults if not present
   
+  // First, manage .gitignore entries (do this before installing)
+  if (!options.dryRun) {
+    const gitignoreResult = installer.manageGitignore({
+      dryRun: options.dryRun
+    });
+    
+    if (gitignoreResult.success && gitignoreResult.added && gitignoreResult.added.length > 0) {
+      console.log(`  - Added to .gitignore: ${gitignoreResult.added.join(', ')}`);
+    }
+  }
+  
   // Install to selected targets
   for (const target of targets) {
     let result;
@@ -172,18 +183,67 @@ async function main() {
   
   // Handle uninstall
   if (options.uninstall) {
-    console.log('Uninstalling Vow from all locations...\n');
+    console.log(chalk.yellow('\n⚠️  Uninstall Vow\n'));
+    console.log('This will remove Vow from:');
+    
+    // Show what will be removed
+    const toRemove = [];
+    if (detection.gitHooks.hasVowInstalled) {
+      toRemove.push('  • Git hooks');
+    }
+    if (detection.husky.detected && detection.husky.hasPreCommit) {
+      toRemove.push('  • Husky configuration');
+    }
+    if (detection.claudeCode.detected && detection.claudeCode.hasGitHook) {
+      toRemove.push('  • Claude Code settings');
+    }
+    toRemove.push('  • .gitignore entries');
+    toRemove.push('  • Temporary files (.vow-challenge, .vow-consent)');
+    
+    if (toRemove.length > 0) {
+      console.log(toRemove.join('\n'));
+    } else {
+      console.log('  (No Vow installation found)');
+    }
+    
+    // Confirmation prompt (skip if --yes flag is provided)
+    if (!options.yes && !options.force) {
+      const prompts = require('prompts');
+      const response = await prompts({
+        type: 'confirm',
+        name: 'confirm',
+        message: 'Are you sure you want to uninstall Vow?',
+        initial: false
+      });
+      
+      if (!response.confirm) {
+        console.log('\nUninstall cancelled\n');
+        process.exit(0);
+      }
+    }
+    
+    console.log('\nUninstalling...');
     const results = installer.uninstall(detection, options);
     
+    // Display results
+    console.log('');
     results.forEach(result => {
-      if (result.success) {
-        console.log(`  - Removed from ${result.type}`);
-      } else {
-        console.log(`  - Failed to remove from ${result.type}: ${result.error}`);
+      if (result.type === 'temporary-files' && result.cleaned?.length > 0) {
+        console.log(chalk.green(`  ✓ Removed temporary files: ${result.cleaned.join(', ')}`));
+      } else if (result.type === 'gitignore') {
+        console.log(chalk.green(`  ✓ Cleaned .gitignore entries`));
+      } else if (result.type === 'git-hook') {
+        console.log(chalk.green(`  ✓ Removed git hook: ${result.hook}`));
+      } else if (result.type === 'husky') {
+        console.log(chalk.green(`  ✓ Removed from Husky`));
+      } else if (result.type === 'claude') {
+        console.log(chalk.green(`  ✓ Removed from Claude Code`));
+      } else if (!result.success) {
+        console.log(chalk.red(`  ✗ Failed to remove from ${result.type}: ${result.error}`));
       }
     });
     
-    console.log('\nUninstallation complete\n');
+    console.log(chalk.green('\n✨ Vow has been uninstalled\n'));
     process.exit(0);
   }
   

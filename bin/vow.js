@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync, spawn } = require('child_process');
+const crypto = require('crypto');
 
 function getRepoRoot() {
   try {
@@ -42,10 +43,11 @@ function getVowContent() {
 
 function checkVow() {
   const repo = getRepoRoot();
-  const consentFile = path.join(repo, '.AGENT_CONSENT');
+  const consentFile = path.join(repo, '.vow-consent');
+  const challengeFile = path.join(repo, '.vow-challenge');
   
   // Get vow content (either local or default)
-  const vowContent = getVowContent();
+  let vowContent = getVowContent();
   
   if (!vowContent) {
     // No vow content available, exit successfully
@@ -54,14 +56,72 @@ function checkVow() {
   
   const consentExists = fs.existsSync(consentFile);
   if (!consentExists) {
-    process.stderr.write(vowContent + '\n');
+    // Generate random validation code
+    const validationCode = crypto.randomInt(0, 1000);
+    
+    // Store validation code in challenge file
+    try {
+      fs.writeFileSync(challengeFile, validationCode.toString(), 'utf8');
+    } catch (e) {
+      // If we can't write challenge file, continue without validation
+      const fallbackHeader = '# ⚠️ STOP - AI ACCOUNTABILITY CHECK\n\n' +
+                            'Before continuing, you need to stop and evaluate yourself with the rules below:\n\n' +
+                            '---\n\n';
+      process.stderr.write(fallbackHeader + vowContent + '\n');
+      return 1;
+    }
+    
+    // Build the complete output with header, content, and footer
+    const header = '# ⚠️ STOP - AI ACCOUNTABILITY CHECK\n\n' +
+                   'Before continuing, you need to stop and evaluate yourself with the rules below:\n\n' +
+                   '---\n\n';
+    
+    const footer = '\n\n---\n\n' +
+                   '## CONSENT INSTRUCTIONS\n\n' +
+                   'If you agree with all applicable items above:\n\n' +
+                   '1. **Review**: Honestly evaluate yourself against each rule\n' +
+                   '2. **Acknowledge**: Inform the user that you have reviewed the rules\n' +
+                   '3. **Consent**: Create a consent file with the validation code\n\n' +
+                   `**VALIDATION CODE**: \`${validationCode}\`\n\n` +
+                   `To provide consent, write EXACTLY this code to the consent file:\n` +
+                   '```bash\n' +
+                   `echo '${validationCode}' > .vow-consent\n` +
+                   '```\n\n' +
+                   '⚠️ **IMPORTANT**: Never create .vow-consent in advance. Always evaluate yourself first!';
+    
+    const fullOutput = header + vowContent + footer;
+    process.stderr.write(fullOutput);
     return 1;
   }
   
-  // Clean up consent file
+  // Validate consent file content if challenge exists
+  if (fs.existsSync(challengeFile)) {
+    try {
+      const expectedCode = fs.readFileSync(challengeFile, 'utf8').trim();
+      const actualCode = fs.readFileSync(consentFile, 'utf8').trim();
+      
+      if (actualCode !== expectedCode) {
+        process.stderr.write(`\n❌ Invalid consent code. Expected '${expectedCode}' but got '${actualCode}'\n`);
+        process.stderr.write('Please review the rules again and provide the correct validation code.\n\n');
+        
+        // Clean up invalid consent
+        fs.unlinkSync(consentFile);
+        return 1;
+      }
+    } catch (e) {
+      // Error reading files, treat as invalid
+      process.stderr.write('\n❌ Error validating consent.\n');
+      return 1;
+    }
+  }
+  
+  // Clean up both files
   try {
     if (fs.existsSync(consentFile)) {
       fs.unlinkSync(consentFile);
+    }
+    if (fs.existsSync(challengeFile)) {
+      fs.unlinkSync(challengeFile);
     }
   } catch (_) {}
   
@@ -76,7 +136,21 @@ function showRules() {
     return 1;
   }
   
-  console.log(vowContent);
+  // Add the same header for consistency
+  const header = '# ⚠️ STOP - AI ACCOUNTABILITY CHECK\n\n' +
+                 'Before continuing, you need to stop and evaluate yourself with the rules below:\n\n' +
+                 '---\n\n';
+  
+  // For rules display, we show the format but not a specific code
+  const footer = '\n\n---\n\n' +
+                 '## CONSENT INSTRUCTIONS\n\n' +
+                 'When these rules are displayed during a vow check:\n\n' +
+                 '1. **Review**: Honestly evaluate yourself against each rule\n' +
+                 '2. **Acknowledge**: Inform the user that you have reviewed the rules\n' +
+                 '3. **Consent**: Create a consent file with the validation code that will be shown\n\n' +
+                 '⚠️ **IMPORTANT**: A unique validation code will be generated each time';
+  
+  console.log(header + vowContent + footer);
   return 0;
 }
 

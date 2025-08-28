@@ -353,7 +353,7 @@ vow install --uninstall
 
 ### Rules System
 
-Vow uses AGENT_VOW.md for accountability rules. If no local `AGENT_VOW.md` exists in your project, the package's default AGENT_VOW.md is used automatically. This ensures AI accountability even in fresh clones.
+Vow uses AGENT_VOW.md for accountability rules. If no local `AGENT_VOW.md` exists in your project, the package's default AGENT_VOW.md is used automatically. This ensures AI accountability works immediately without setup.
 
 ```bash
 # View current rules (local or package default)
