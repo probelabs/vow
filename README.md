@@ -122,16 +122,6 @@ npx -y @probelabs/vow@latest install
           }
         ]
       }
-    ],
-    "SubagentStop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "npx -y @probelabs/vow@latest check"
-          }
-        ]
-      }
     ]
   }
 }
@@ -281,7 +271,7 @@ Vow automatically detects:
 ### AI Tools
 - ✅ **Claude Code** with comprehensive hook support:
   - Basic `gitCommitHook` configuration
-  - Advanced `PreToolUse`, `Stop`, `SubagentStop` hooks
+  - Advanced `PreToolUse`, `Stop` hooks
   - Intelligent scope selection (local vs project settings)
 - ✅ **Cursor AI** (`.cursor/`)
 - ✅ Custom AI tool configurations
