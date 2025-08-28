@@ -40,3 +40,4 @@ temp/
 # Vow - AI accountability files
 .vow-challenge
 .vow-consent
+.claude/settings.local.json

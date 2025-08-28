@@ -41,7 +41,8 @@ function getVowContent() {
   return null;
 }
 
-function checkVow() {
+function checkVow(options = {}) {
+  const { hookMode = false, hookType = null } = options;
   const repo = getRepoRoot();
   const consentFile = path.join(repo, '.vow-consent');
   const challengeFile = path.join(repo, '.vow-challenge');
@@ -50,7 +51,15 @@ function checkVow() {
   let vowContent = getVowContent();
   
   if (!vowContent) {
-    // No vow content available, exit successfully
+    // No vow content available
+    if (hookMode) {
+      const response = { continue: true };
+      if (hookType === 'PreToolUse') {
+        response.hookSpecificOutput = { permissionDecision: 'allow' };
+      }
+      console.log(JSON.stringify(response));
+      return 0;
+    }
     return 0;
   }
   
@@ -63,7 +72,16 @@ function checkVow() {
     try {
       fs.writeFileSync(challengeFile, validationCode.toString(), 'utf8');
     } catch (e) {
-      // If we can't write challenge file, continue without validation
+      // If we can't write challenge file, handle based on mode
+      if (hookMode) {
+        const response = { continue: true };
+        if (hookType === 'PreToolUse') {
+          response.hookSpecificOutput = { permissionDecision: 'allow' };
+        }
+        console.log(JSON.stringify(response));
+        return 0;
+      }
+      
       const fallbackHeader = '# ⚠️ STOP - AI ACCOUNTABILITY CHECK\n\n' +
                             'Before continuing, you need to stop and evaluate yourself with the rules below:\n\n' +
                             '---\n\n';
@@ -71,7 +89,41 @@ function checkVow() {
       return 1;
     }
     
-    // Build the complete output with header, content, and footer
+    // Handle hook mode - need consent before proceeding
+    if (hookMode) {
+      const stopReason = `Vow accountability check required. Validation code: ${validationCode}`;
+      const response = { 
+        continue: false, 
+        stopReason: stopReason
+      };
+      
+      if (hookType === 'PreToolUse') {
+        response.hookSpecificOutput = { permissionDecision: 'deny' };
+      }
+      
+      // Also write the full rules to stderr for AI to see
+      const header = '# ⚠️ STOP - AI ACCOUNTABILITY CHECK\n\n' +
+                     'Before continuing, you need to stop and evaluate yourself with the rules below:\n\n' +
+                     '---\n\n';
+      
+      const footer = '\n\n---\n\n' +
+                     '## CONSENT INSTRUCTIONS\n\n' +
+                     'If you agree with all applicable items above:\n\n' +
+                     '1. **Review**: Honestly evaluate yourself against each rule\n' +
+                     '2. **Acknowledge**: Inform the user that you have reviewed the rules\n' +
+                     '3. **Consent**: Create a consent file with the validation code\n\n' +
+                     `**VALIDATION CODE**: \`${validationCode}\`\n\n` +
+                     `Create a file named \`.vow-consent\` containing exactly: \`${validationCode}\`\n\n` +
+                     '⚠️ **IMPORTANT**: Never create .vow-consent in advance. Always evaluate yourself first!';
+      
+      const fullOutput = header + vowContent + footer;
+      process.stderr.write(fullOutput);
+      
+      console.log(JSON.stringify(response));
+      return 2; // Exit code 2 for blocking error
+    }
+    
+    // Build the complete output with header, content, and footer for non-hook mode
     const header = '# ⚠️ STOP - AI ACCOUNTABILITY CHECK\n\n' +
                    'Before continuing, you need to stop and evaluate yourself with the rules below:\n\n' +
                    '---\n\n';
@@ -98,6 +150,20 @@ function checkVow() {
       const actualCode = fs.readFileSync(consentFile, 'utf8').trim();
       
       if (actualCode !== expectedCode) {
+        if (hookMode) {
+          const response = { 
+            continue: false, 
+            stopReason: `Invalid consent code. Expected '${expectedCode}' but got '${actualCode}'` 
+          };
+          if (hookType === 'PreToolUse') {
+            response.hookSpecificOutput = { permissionDecision: 'deny' };
+          }
+          console.log(JSON.stringify(response));
+          // Clean up invalid consent
+          fs.unlinkSync(consentFile);
+          return 2;
+        }
+        
         process.stderr.write(`\n❌ Invalid consent code. Expected '${expectedCode}' but got '${actualCode}'\n`);
         process.stderr.write('Please review the rules again and provide the correct validation code.\n\n');
         
@@ -107,6 +173,18 @@ function checkVow() {
       }
     } catch (e) {
       // Error reading files, treat as invalid
+      if (hookMode) {
+        const response = { 
+          continue: false, 
+          stopReason: 'Error validating consent' 
+        };
+        if (hookType === 'PreToolUse') {
+          response.hookSpecificOutput = { permissionDecision: 'deny' };
+        }
+        console.log(JSON.stringify(response));
+        return 2;
+      }
+      
       process.stderr.write('\n❌ Error validating consent.\n');
       return 1;
     }
@@ -121,6 +199,15 @@ function checkVow() {
       fs.unlinkSync(challengeFile);
     }
   } catch (_) {}
+  
+  // Consent is valid - allow action to proceed
+  if (hookMode) {
+    const response = { continue: true };
+    if (hookType === 'PreToolUse') {
+      response.hookSpecificOutput = { permissionDecision: 'allow' };
+    }
+    console.log(JSON.stringify(response));
+  }
   
   return 0;
 }
@@ -242,7 +329,11 @@ function main() {
   
   // Check for explicit check command
   if (args[0] === 'check') {
-    const exitCode = checkVow();
+    const hookMode = args.includes('--hook');
+    const hookTypeArg = args.find(arg => arg.startsWith('--hook-type='));
+    const hookType = hookTypeArg ? hookTypeArg.split('=')[1] : null;
+    
+    const exitCode = checkVow({ hookMode, hookType });
     process.exit(exitCode);
   }
   
