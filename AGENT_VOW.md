@@ -39,11 +39,7 @@ Before finishing this task, you must honestly review your work.
 
 ---
 
-**If you agree with all applicable items above**, create the consent file:
-
-```bash
-printf '1' | tee .AGENT_CONSENT >/dev/null
-```
+**If you agree with all applicable items above**, create a file named `.AGENT_CONSENT` in the project root.
 
 **IMPORTANT**: For the next runs never create .AGENT_CONSENT in advance. Always evaluate yourself against these rules first.
 
