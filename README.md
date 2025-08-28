@@ -60,7 +60,7 @@ npx @probelabs/vow@latest install --claude  # Claude Code only
 
 - **Hook Integration**: Vow installs as a git pre-commit hook or similar
 - **Exit Codes**: Returns 1 (block) if no consent, 0 (allow) if consent given
-- **Consent File**: `.AGENT_CONSENT` contains exactly '1' to indicate consent
+- **Consent File**: `.AGENT_CONSENT` file created to indicate consent
 - **Auto-cleanup**: Consent file is removed after check
 - **Default Rules**: Built into npm package, used if no local AGENT_VOW.md
 
