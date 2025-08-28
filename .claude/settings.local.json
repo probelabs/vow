@@ -3,8 +3,14 @@
     "allow": [
       "Edit",
       "WebSearch",
-      "WebFetch(domain:typicode.github.io)"
+      "WebFetch(domain:typicode.github.io)",
+      "Bash(git add:*)"
     ],
     "deny": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "big-brain"
+  ],
+  "gitCommitHook": "npx @probelabs/vow check"
 }
