@@ -40,7 +40,8 @@
   ],
   "scripts": {
     "test": "echo \"No tests yet\" && exit 0",
-    "deploy:site": "cd site && npx wrangler pages deploy . --project-name=vow-site --commit-dirty=true"
+    "deploy:site": "cd site && npx wrangler pages deploy . --project-name=vow-site --commit-dirty=true",
+    "deploy": "node scripts/deploy.js"
   },
   "dependencies": {
     "prompts": "^2.4.2",
