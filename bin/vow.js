@@ -46,19 +46,43 @@ function checkVow(options = {}) {
   const repo = getRepoRoot();
   const consentFile = path.join(repo, '.vow-consent');
   const challengeFile = path.join(repo, '.vow-challenge');
-  
-  // Handle PreToolUseGit - read from stdin and filter for git commits
-  if (hookType === 'PreToolUseGit') {
-    let stdinData = '';
+  const cooldownFile = path.join(repo, '.vow-cooldown'); // prevent immediate re-prompt loops
+  const COOLDOWN_MS = parseInt(process.env.VOW_COOLDOWN_MS || '5000', 10);
+
+  // Parse hook input (stdin) for ALL hook types when running as a hook
+  let hookInput = null;
+  let stdinData = '';
+  if (hookMode) {
     try {
-      stdinData = fs.readFileSync(0, 'utf8'); // Read from stdin
-      const hookInput = JSON.parse(stdinData);
-      
+      stdinData = fs.readFileSync(0, 'utf8');
+      if (stdinData && stdinData.trim()) {
+        hookInput = JSON.parse(stdinData);
+      }
+    } catch (_) {
+      // Ignore parse errors: we'll operate with defaults
+    }
+  }
+  const isStopHook = hookType === 'Stop' || hookType === 'SubagentStop';
+  const stopHookActive = !!(hookInput && hookInput.stop_hook_active === true);
+
+  // Loop guard: If Claude is already continuing due to a Stop/SubagentStop hook,
+  // DO NOT initiate a new challenge. This prevents infinite stop loops.
+  if (hookMode && isStopHook && stopHookActive) {
+    console.log(JSON.stringify({ continue: true }));
+    return 0;
+  }
+  
+  // Handle PreToolUseGit - filter for git commits (stdin already parsed above)
+  if (hookType === 'PreToolUseGit') {
+    try {
+      const toolName = (hookInput && hookInput.tool_name) || '';
+      const command = ((hookInput && hookInput.tool_input) || {}).command || '';
+
       // Debug logging
       if (debug || process.env.VOW_DEBUG) {
         const debugFile = path.join(repo, '.vow-debug.log');
         const timestamp = new Date().toISOString();
-        const debugEntry = `[${timestamp}] Hook Type: ${hookType}, Hook Mode: ${hookMode}\nSTDIN: ${stdinData}\n---\n`;
+        const debugEntry = `[${timestamp}] Hook Type: ${hookType}, Hook Mode: ${hookMode}\nSTDIN: ${stdinData || '(empty)'}\n---\n`;
         
         try {
           fs.appendFileSync(debugFile, debugEntry);
@@ -66,10 +90,6 @@ function checkVow(options = {}) {
           // Ignore debug write errors
         }
       }
-      
-      // Check if this is a Bash git commit command
-      const toolName = hookInput.tool_name || '';
-      const command = (hookInput.tool_input || {}).command || '';
       
       if (toolName !== 'Bash' || !command.startsWith('git commit')) {
         // Not a git commit, allow it
@@ -93,8 +113,7 @@ function checkVow(options = {}) {
   if ((debug || process.env.VOW_DEBUG) && hookType !== 'PreToolUseGit') {
     const debugFile = path.join(repo, '.vow-debug.log');
     const timestamp = new Date().toISOString();
-    const claudeToolInput = process.env.CLAUDE_TOOL_INPUT || 'undefined';
-    const debugEntry = `[${timestamp}] Hook Type: ${hookType || 'none'}, Hook Mode: ${hookMode}\nCLAUDE_TOOL_INPUT: ${claudeToolInput}\n---\n`;
+    const debugEntry = `[${timestamp}] Hook Type: ${hookType || 'none'}, Hook Mode: ${hookMode}\nSTDIN: ${stdinData || '(empty)'}\n---\n`;
     
     try {
       fs.appendFileSync(debugFile, debugEntry);
@@ -121,6 +140,20 @@ function checkVow(options = {}) {
   
   const consentExists = fs.existsSync(consentFile);
   if (!consentExists) {
+    // For Stop/SubagentStop, apply a short cooldown so our own follow-up tool calls
+    // (e.g., "vow rules" or "vow check") don't trigger a fresh challenge immediately.
+    if (hookMode && isStopHook) {
+      let lastTs = 0;
+      try {
+        lastTs = parseInt(fs.readFileSync(cooldownFile, 'utf8').trim(), 10) || 0;
+      } catch (_) {}
+      const now = Date.now();
+      if (stopHookActive || (lastTs && now - lastTs < COOLDOWN_MS)) {
+        console.log(JSON.stringify({ continue: true }));
+        return 0;
+      }
+    }
+
     // Generate random validation code
     const validationCode = crypto.randomInt(0, 1000);
     
@@ -243,6 +276,12 @@ function checkVow(options = {}) {
     }
     if (fs.existsSync(challengeFile)) {
       fs.unlinkSync(challengeFile);
+    }
+    // Mark cooldown after a successful validation to avoid immediate retrigger
+    if (hookMode && isStopHook) {
+      try {
+        fs.writeFileSync(cooldownFile, String(Date.now()), 'utf8');
+      } catch (_) {}
     }
   } catch (_) {}
   
