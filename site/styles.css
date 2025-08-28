@@ -358,6 +358,17 @@ ul.prose li {
     opacity: 0.7;
 }
 
+/* Links in prose sections */
+.prose a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.prose a:hover {
+    text-decoration: underline;
+}
+
 /* Footer */
 footer {
     margin-top: 4rem;

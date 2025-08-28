@@ -12,7 +12,7 @@ export default {
       
       // Remove /vow from the path and proxy to the Pages site
       const newPath = url.pathname.replace('/vow', '') || '/';
-      const pagesUrl = `https://8e504bb1.vow-site.pages.dev${newPath}${url.search}`;
+      const pagesUrl = `https://7d108b99.vow-site.pages.dev${newPath}${url.search}`;
       
       // Fetch from the Pages deployment
       const response = await fetch(pagesUrl, {
