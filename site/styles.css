@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 :root {
     --text-primary: #1a1a1a;
     --text-secondary: #4a4a4a;
@@ -73,6 +77,21 @@ header {
     color: var(--text-secondary);
     font-size: 1.25rem;
     letter-spacing: 0.02em;
+}
+
+.skip-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.skip-link:hover {
+    opacity: 1;
+    text-decoration: underline;
 }
 
 /* Promise Image */
