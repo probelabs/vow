@@ -1,0 +1,390 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #767676;
+    --accent: #8b0000;
+    --background: #ffffff;
+    --max-width: 720px;
+}
+
+body {
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.7;
+    color: var(--text-primary);
+    background: var(--background);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* GitHub Link */
+.github-link {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    z-index: 100;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.github-link:hover {
+    opacity: 1;
+}
+
+.github-link svg {
+    width: 28px;
+    height: 28px;
+}
+
+main {
+    flex: 1;
+    padding: 4rem 2rem;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Header */
+header {
+    text-align: center;
+}
+
+.title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 4rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    font-style: italic;
+}
+
+.subtitle {
+    font-style: italic;
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    letter-spacing: 0.02em;
+}
+
+/* Promise Image */
+.promise-image {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.promise-image img {
+    max-width: 100%;
+    height: auto;
+    max-height: 600px;
+    /* No shadows for clean appearance */
+}
+
+/* Vow Text */
+.vow-text {
+}
+
+.vow-text h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.5rem;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 3rem;
+    font-style: italic;
+    color: var(--text-primary);
+}
+
+.vow-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.ornament {
+    text-align: center;
+    font-size: 2rem;
+    margin: 2rem 0;
+    color: var(--accent);
+    font-weight: 400;
+}
+
+.verse {
+    text-align: center;
+    margin: 3rem 0;
+    font-style: italic;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+}
+
+.verse em {
+    font-style: normal;
+}
+
+.prose {
+    text-indent: 2em;
+    margin: 2rem 0;
+    text-align: justify;
+    hyphens: auto;
+    font-size: 1.05rem;
+}
+
+.declaration {
+    margin: 4rem 0;
+    padding: 3rem 2rem 0rem 2rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.declaration h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+    font-style: italic;
+}
+
+.article {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+    position: relative;
+}
+
+.numeral {
+    position: absolute;
+    left: 0;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.closing {
+    margin-top: 4rem;
+    font-size: 1.05rem;
+}
+
+.signature {
+    text-align: right;
+    margin-top: 3rem;
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+/* Installation Section */
+.installation {
+    margin: 6rem 0;
+    padding-top: 4rem;
+    border-top: 2px solid #e0e0e0;
+}
+
+.installation h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.5rem;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 3rem;
+    font-style: italic;
+    color: var(--text-primary);
+}
+
+.installation h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin: 3rem 0 1.5rem;
+    font-style: italic;
+}
+
+.instructions {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.instruction-intro {
+    font-style: italic;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.code-block {
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    overflow-x: auto;
+}
+
+.code-block pre {
+    font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.code-block code {
+    color: var(--text-primary);
+}
+
+.comment {
+    color: #6a9955;
+    font-style: italic;
+}
+
+.output {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.cursor {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.instruction-note {
+    margin-top: 2rem;
+    font-style: italic;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* Probe Ecosystem */
+.probe-ecosystem {
+    margin: 4rem 0;
+    padding: 2rem 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.probe-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.probe-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.probe-text h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.probe-text p {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+}
+
+.probe-text a {
+    color: var(--text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--text-primary);
+}
+
+.probe-text a:hover {
+    opacity: 0.7;
+}
+
+/* Footer */
+footer {
+    margin-top: 4rem;
+    padding: 3rem 2rem;
+    background: #fafafa;
+    border-top: 1px solid #e0e0e0;
+}
+
+.footer-content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    text-align: center;
+}
+
+.footer-content p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+
+.footer-content a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.footer-content a:hover {
+    border-bottom-color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .title {
+        font-size: 3rem;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .vow-text h2, .installation h2 {
+        font-size: 2rem;
+    }
+    
+    main {
+        padding: 2rem 1.5rem;
+    }
+    
+    .declaration {
+        padding: 2rem 1rem;
+    }
+    
+    .code-block {
+        padding: 1rem;
+    }
+    
+    .code-block pre {
+        font-size: 0.75rem;
+    }
+    
+    .probe-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .probe-logo {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .github-link {
+        top: 1rem;
+        right: 1rem;
+    }
+    
+    .github-link svg {
+        width: 24px;
+        height: 24px;
+    }
+}/* Updated: Thu Aug 28 07:43:07 +03 2025 */
