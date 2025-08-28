@@ -147,25 +147,23 @@ function checkVow(options = {}) {
     
     // Handle hook mode - need consent before proceeding
     if (hookMode) {
-      const header = '# ⚠️ STOP - AI ACCOUNTABILITY CHECK\n\n' +
-                     'Before continuing, you need to stop and evaluate yourself with the rules below:\n\n' +
-                     '---\n\n';
-      
-      const footer = '\n\n---\n\n' +
-                     '## CONSENT INSTRUCTIONS\n\n' +
-                     'If you agree with all applicable items above:\n\n' +
-                     '1. **Review**: Honestly evaluate yourself against each rule\n' +
-                     '2. **Acknowledge**: Inform the user that you have reviewed the rules\n' +
-                     '3. **Consent**: Create a consent file with the validation code\n' +
-                     '4. **Retry**: After providing consent, retry the blocked command\n\n' +
-                     `**VALIDATION CODE**: \`${validationCode}\`\n\n` +
-                     `Create a file named \`.vow-consent\` containing exactly: \`${validationCode}\`\n\n` +
-                     '⚠️ **IMPORTANT**: Never create .vow-consent in advance. Always evaluate yourself first!';
-      
-      const fullRulesContent = header + vowContent + footer;
+      const minimalMessage = '⚠️ VOW ACCOUNTABILITY CHECK REQUIRED\n\n' +
+                            'Follow the <vow-rules>.\n\n' +
+                            'If you do not remember them word by word, or have never seen them, first read using:\n' +
+                            '`npx -y @probelabs/vow@latest rules --ai`\n\n' +
+                            '## RESPONSE RULES\n\n' +
+                            '1. **Review thoroughly**: Examine all recent changes related to the user\'s task according to <vow-rules>\n' +
+                            '2. **Respond concisely** with ONLY:\n' +
+                            '   - "✓ All rules satisfied" if fully compliant\n' +
+                            '   - List specific violations if not compliant\n' +
+                            '3. **Provide consent** (only if no violations):\n' +
+                            `   Create file \`.vow-consent\` containing: \`${validationCode}\`\n` +
+                            '4. **Retry the command** after providing consent\n\n' +
+                            `**VALIDATION CODE**: \`${validationCode}\`\n\n` +
+                            '⚠️ **IMPORTANT**: You can only create consent file after thorough review. If there are violations, you cannot provide consent.';
       
       // For denial: Use exit code 2 + stderr (no JSON output)
-      process.stderr.write(fullRulesContent);
+      process.stderr.write(minimalMessage);
       return 2; // Exit code 2 blocks the tool call
     }
     
@@ -176,13 +174,14 @@ function checkVow(options = {}) {
     
     const footer = '\n\n---\n\n' +
                    '## CONSENT INSTRUCTIONS\n\n' +
-                   'If you agree with all applicable items above:\n\n' +
-                   '1. **Review**: Honestly evaluate yourself against each rule\n' +
-                   '2. **Acknowledge**: Inform the user that you have reviewed the rules\n' +
-                   '3. **Consent**: Create a consent file with the validation code\n' +
-                   '4. **Retry**: After providing consent, retry the blocked command\n\n' +
+                   'After reviewing all rules above:\n\n' +
+                   '1. **Respond with ONLY**:\n' +
+                   '   - "✓ All rules satisfied" if fully compliant\n' +
+                   '   - List specific violations if not compliant\n\n' +
+                   '2. **Provide consent**:\n' +
+                   `   Create file \`.vow-consent\` containing: \`${validationCode}\`\n\n` +
+                   '3. **Retry the blocked command**\n\n' +
                    `**VALIDATION CODE**: \`${validationCode}\`\n\n` +
-                   `Create a file named \`.vow-consent\` containing exactly: \`${validationCode}\`\n\n` +
                    '⚠️ **IMPORTANT**: Never create .vow-consent in advance. Always evaluate yourself first!';
     
     const fullOutput = header + vowContent + footer;
@@ -262,7 +261,7 @@ function checkVow(options = {}) {
   return 0;
 }
 
-function showRules() {
+function showRules(aiMode = false) {
   const vowContent = getVowContent();
   
   if (!vowContent) {
@@ -270,7 +269,15 @@ function showRules() {
     return 1;
   }
   
-  // Add the same header for consistency
+  // AI mode: wrap in tags, no headers/footers
+  if (aiMode) {
+    console.log('<vow-rules>');
+    console.log(vowContent);
+    console.log('</vow-rules>');
+    return 0;
+  }
+  
+  // Regular mode: show with headers and footers
   const header = '# ⚠️ STOP - AI ACCOUNTABILITY CHECK\n\n' +
                  'Before continuing, you need to stop and evaluate yourself with the rules below:\n\n' +
                  '---\n\n';
@@ -417,7 +424,8 @@ function main() {
   
   // Check for rules command
   if (args[0] === 'rules') {
-    const exitCode = showRules();
+    const aiMode = args.includes('--ai');
+    const exitCode = showRules(aiMode);
     process.exit(exitCode);
   }
   
