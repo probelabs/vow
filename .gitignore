@@ -40,4 +40,5 @@ temp/
 # Vow - AI accountability files
 .vow-challenge
 .vow-consent
+.vow-cooldown
 .claude/settings.local.json
