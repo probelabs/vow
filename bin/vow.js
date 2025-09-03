@@ -198,7 +198,7 @@ function checkVow(options = {}) {
     
     // Handle hook mode - need consent before proceeding
     if (hookMode) {
-      const minimalMessage = `Stop and fully re-evaluate your last response and task against <vow-rules>. Take time for separate thinking. If you do not remember <vow-rules> word by word, or have never seen them, first read using: \`npx -y @probelabs/vow@latest rules --ai\` <vow-code>${validationCode}</vow-code>`;
+      const minimalMessage = `Stop and fully re-evaluate your last response and task against <vow-rules>. Take time for separate thinking. If you do not remember <vow-rules> word by word, or have never seen them, first read using: \`npx -y @probelabs/vow@latest rules --ai\` While answering remind me to respond according <vow-response-rules> to rules. <vow-code>${validationCode}</vow-code>`;
       
       // For denial: Use exit code 2 + stderr (no JSON output)
       process.stderr.write(minimalMessage);
