@@ -305,14 +305,18 @@ function showRules(aiMode = false) {
     console.log('1. **Review thoroughly**: Examine all recent changes related to the user\'s task according to <vow-rules>');
     console.log('2. **Respond concisely** with ONLY:');
     console.log('   - "✓ All rules satisfied" if fully compliant');
-    console.log('   - List specific violations if not compliant');
+    console.log('   - List specific violations if not compliant, then iterate and fix them before responding to user (unless requiring user confirmation or acknowledging failure)');
     console.log('3. **Provide consent** (only if no violations):');
     console.log('   Create file `.vow-consent` containing the validation code from <vow-code> tag');
     console.log('4. **Retry any blocked command** (e.g., git commit) after providing consent');
     console.log('');
-    console.log('Create file `.vow-consent` containing the validation code if all rules satisfied.');
+    console.log('Create file `.vow-consent` containing the validation code from <vow-code> tag if all rules satisfied.');
     console.log('⚠️ **IMPORTANT**: You can only create consent file after thorough review. If there are violations, you cannot provide consent.');
+    console.log('');
+    console.log('5. **Respond to user**: After providing consent, respond to the user with results of the last task, including any fixes made.');
     console.log('</vow-response-rules>');
+    console.log('');
+    console.log('The validation code appears in <vow-code>NUMBER</vow-code> format. Extract the NUMBER and create a file named `.vow-consent` containing only that number.');
     return 0;
   }
   
