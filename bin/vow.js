@@ -180,13 +180,7 @@ function checkVow(options = {}) {
     
     // Handle hook mode - need consent before proceeding
     if (hookMode) {
-      const minimalMessage = '⚠️ VOW ACCOUNTABILITY CHECK REQUIRED\n\n' +
-                            'Follow the <vow-rules> in order to pass this check.\n\n' +
-                            'If you do not remember <vow-rules> word by word, or have never seen them, first read using:\n' +
-                            '`npx -y @probelabs/vow@latest rules --ai`\n\n' +
-                            `**VALIDATION CODE**: \`${validationCode}\`\n\n` +
-                            `Create file \`${repo}/.vow-consent\` containing: \`${validationCode}\` if all rules satisfied.\n\n` +
-                            '⚠️ **IMPORTANT**: You can only create consent file after thorough review. If there are violations, you cannot provide consent.';
+      const minimalMessage = `Stop and fully re-evaluate your last response and task against <vow-rules>. Take time for separate thinking. If you do not remember <vow-rules> word by word, or have never seen them, first read using: \`npx -y @probelabs/vow@latest rules --ai\` <vow-code>${validationCode}</vow-code>`;
       
       // For denial: Use exit code 2 + stderr (no JSON output)
       process.stderr.write(minimalMessage);
@@ -207,7 +201,7 @@ function checkVow(options = {}) {
                    '2. **Provide consent**:\n' +
                    `   Create file \`${repo}/.vow-consent\` containing: \`${validationCode}\`\n\n` +
                    '3. **Retry any blocked command** (e.g., git commit)\n\n' +
-                   `**VALIDATION CODE**: \`${validationCode}\`\n\n` +
+                   `<vow-code>${validationCode}</vow-code>\n\n` +
                    '⚠️ **IMPORTANT**: Never create .vow-consent in advance. Always evaluate yourself first!';
     
     const fullOutput = header + vowContent + footer;
@@ -313,8 +307,11 @@ function showRules(aiMode = false) {
     console.log('   - "✓ All rules satisfied" if fully compliant');
     console.log('   - List specific violations if not compliant');
     console.log('3. **Provide consent** (only if no violations):');
-    console.log('   Create the consent file as instructed in the vow check');
+    console.log('   Create file `.vow-consent` containing the validation code from <vow-code> tag');
     console.log('4. **Retry any blocked command** (e.g., git commit) after providing consent');
+    console.log('');
+    console.log('Create file `.vow-consent` containing the validation code if all rules satisfied.');
+    console.log('⚠️ **IMPORTANT**: You can only create consent file after thorough review. If there are violations, you cannot provide consent.');
     console.log('</vow-response-rules>');
     return 0;
   }
