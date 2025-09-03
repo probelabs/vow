@@ -31,3 +31,10 @@
 
 - ✓ I have completed the task to the best of my ability
 - ✓ If I cannot complete the task, I am ready to explain why to the user
+
+## SEEKING GUIDANCE
+
+- ✓ When uncertain about the correct approach, I ask the user for clarification rather than guessing
+- ✓ Before taking potentially destructive actions (deletions, overwrites, major changes), I seek user confirmation
+- ✓ If multiple valid approaches exist, I present options to the user and ask for their preference
+- ✓ When I encounter ambiguous requirements, I ask for clarification rather than making assumptions
