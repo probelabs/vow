@@ -297,6 +297,10 @@ function showRules(aiMode = false) {
   
   // AI mode: wrap in tags, no headers/footers
   if (aiMode) {
+    // Print version at the top
+    const packageJson = require('../package.json');
+    console.log(`vow v${packageJson.version}`);
+    console.log('');
     console.log('<vow-rules>');
     console.log(vowContent);
     console.log('</vow-rules>');
