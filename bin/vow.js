@@ -143,12 +143,22 @@ function checkVow(options = {}) {
     // For Stop/SubagentStop, apply a short cooldown so our own follow-up tool calls
     // (e.g., "vow rules" or "vow check") don't trigger a fresh challenge immediately.
     if (hookMode && isStopHook) {
-      let lastTs = 0;
+      let lastTs = null;
       try {
-        lastTs = parseInt(fs.readFileSync(cooldownFile, 'utf8').trim(), 10) || 0;
-      } catch (_) {}
+        const content = fs.readFileSync(cooldownFile, 'utf8').trim();
+        lastTs = parseInt(content, 10);
+        // Ensure we have a valid timestamp (not NaN or 0)
+        if (isNaN(lastTs) || lastTs <= 0) {
+          lastTs = null;
+        }
+      } catch (_) {
+        // File doesn't exist or can't be read
+        lastTs = null;
+      }
+      
       const now = Date.now();
-      if (stopHookActive || (lastTs && now - lastTs < COOLDOWN_MS)) {
+      // Check cooldown: if we have a valid timestamp AND it's within cooldown period
+      if (stopHookActive || (lastTs !== null && now - lastTs < COOLDOWN_MS)) {
         console.log(JSON.stringify({ continue: true }));
         return 0;
       }
@@ -160,6 +170,14 @@ function checkVow(options = {}) {
     // Store validation code in challenge file
     try {
       fs.writeFileSync(challengeFile, validationCode.toString(), 'utf8');
+      
+      // Write cooldown NOW when presenting challenge, not after consent
+      // This ensures the cooldown period starts from challenge presentation
+      if (hookMode && isStopHook) {
+        try {
+          fs.writeFileSync(cooldownFile, String(Date.now()), 'utf8');
+        } catch (_) {}
+      }
     } catch (e) {
       // If we can't write challenge file, handle based on mode
       if (hookMode) {
@@ -264,12 +282,7 @@ function checkVow(options = {}) {
     if (fs.existsSync(challengeFile)) {
       fs.unlinkSync(challengeFile);
     }
-    // Mark cooldown after a successful validation to avoid immediate retrigger
-    if (hookMode && isStopHook) {
-      try {
-        fs.writeFileSync(cooldownFile, String(Date.now()), 'utf8');
-      } catch (_) {}
-    }
+    // Cooldown is now written when challenge is presented, not here
   } catch (_) {}
   
   // Consent is valid - allow action to proceed
